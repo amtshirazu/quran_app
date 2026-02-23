@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../core/router/app_router.dart';
+import '../core/theme/app_theme.dart';
+
 class QuranApp extends StatelessWidget {
   const QuranApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Quran App',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Quran App'),
-        ),
-      ),
+      theme: AppTheme.lightTheme,
+      routerConfig: AppRouter.goRouter,
     );
   }
 }
