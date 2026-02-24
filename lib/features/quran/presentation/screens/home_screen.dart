@@ -16,12 +16,23 @@ class HomeScreen extends StatelessWidget {
       appBar: CustomAppBar(
           title: 'Quran App'
       ),
-      body: CustomButton(
-          text: "Start Reading",
-          onPressed: () {
-            context.go('/quran');
-          },
-      ),
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomButton(
+              text: "Read Quran",
+              onPressed: () {
+                context.go('/quran');
+              },
+            ),
+            CustomButton(
+              text: "Listen Quran",
+              onPressed: () {
+                context.go('/quran');
+              },
+            ),
+          ],
+        ),
     );
   }
 }
