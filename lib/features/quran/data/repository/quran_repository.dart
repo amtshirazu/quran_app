@@ -13,7 +13,7 @@ class QuranRepository {
   }) async {
     final data = await datasource.loadQuranJson("assets/quran/scripts/$script.json");
     final filtered = data
-        .where((element) => element.surah_number == surahNumber)
+        .where((element) => element["surah_number"] == surahNumber)
         .toList();
     return filtered.map((e) => Ayah.fromJson(e)).toList();
   }
