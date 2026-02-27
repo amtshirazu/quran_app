@@ -1,0 +1,4 @@
+enum ReadingMode {
+  reading,
+  translation,
+}

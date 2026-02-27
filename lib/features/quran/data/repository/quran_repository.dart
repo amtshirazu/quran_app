@@ -11,7 +11,7 @@ class QuranRepository {
     required int surahNumber,
     required String script,
   }) async {
-    final data = await datasource.loadQuranJson("assets/quran/scripts/$script.json");
+    final data = await datasource.loadQuranJson("quran/scripts/$script.json");
     final filtered = data
         .where((element) => element["surah_number"] == surahNumber)
         .toList();
