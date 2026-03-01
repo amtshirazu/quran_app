@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../../../core/constants/app_colors.dart';
+
+import '../../../../../core/constants/app_colors.dart';
 
 
 
-class StudyPlanCard extends StatelessWidget {
-  const StudyPlanCard({super.key});
+class LifeSituationCard extends StatelessWidget {
+  const LifeSituationCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
-      margin: const EdgeInsets.only(left: 15, right: 15),
+      margin: const EdgeInsets.only(bottom: 25, left: 15, right: 15),
       elevation: 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
       clipBehavior: Clip.antiAlias,
+
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
@@ -26,8 +27,8 @@ class StudyPlanCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.blue500,
-              AppColors.blue600,
+              AppColors.purple500,
+              AppColors.purple500,
             ],
           ),
         ),
@@ -37,14 +38,14 @@ class StudyPlanCard extends StatelessWidget {
 
             Row(
               children: [
-                const Icon(
-                  LucideIcons.calendar1,
+                Icon(
+                  LucideIcons.lightbulb,
                   color: Colors.white,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
-                  "Your Study Plan",
+                  "How are you feeling?",
                   style: textTheme.headlineLarge,
                 ),
               ],
@@ -53,9 +54,9 @@ class StudyPlanCard extends StatelessWidget {
             const SizedBox(height: 12),
 
             const Text(
-              "Create a personalized plan for reading, understanding, or memorizing",
+              "Find verses that speak to your heart right now",
               style: TextStyle(
-                color: AppColors.blue100, // blue-50
+                color: AppColors.emerald50,
                 fontSize: 15,
               ),
             ),
@@ -68,7 +69,7 @@ class StudyPlanCard extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  foregroundColor: AppColors.blue600,
+                  foregroundColor: AppColors.purple600,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   shape: RoundedRectangleBorder(
@@ -76,9 +77,9 @@ class StudyPlanCard extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  // navigate to study-plan
+                  // navigate to life-situation
                 },
-                child: const Text("Create Plan"),
+                child: const Text("Find Guidance"),
               ),
             ),
           ],

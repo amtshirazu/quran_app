@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quran_app/features/quran/presentation/widgets/next_prayer_card.dart';
-import '../../../../core/constants/app_colors.dart';
+import 'package:quran_app/features/quran/presentation/widgets/home_widgets/next_prayer_card.dart';
+import '../../../../../core/constants/app_colors.dart';
 import 'greeting_row.dart';
 
 

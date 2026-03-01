@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quran_app/features/quran/presentation/widgets/body_section.dart';
+import 'package:go_router/go_router.dart';
+import 'package:quran_app/features/quran/presentation/widgets/home_widgets/body_section.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../widgets/bottom_navbar.dart';
-import '../widgets/header_section.dart';
+import '../widgets/home_widgets/header_section.dart';
 
 
 
@@ -46,6 +47,24 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             selectedIndex = index;
           });
+
+          switch (index) {
+            case 0:
+              context.go('/');
+              break;
+            case 1:
+              context.go('/surah');
+              break;
+            case 2:
+              context.go('/audio');
+              break;
+            case 3:
+              context.go('/search');
+              break;
+            case 4:
+              context.go('/settings');
+              break;
+          }
         },
       ),
     );

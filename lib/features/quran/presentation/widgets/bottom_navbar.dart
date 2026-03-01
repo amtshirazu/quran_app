@@ -26,31 +26,38 @@ class BottomNavbar extends StatelessWidget {
         children: [
 
           _NavItem(
+            icon: LucideIcons.book,
+            text: "Home",
+            onTap: () => onTap(0),
+            isActive: currentIndex == 0,
+          ),
+
+          _NavItem(
               icon: LucideIcons.bookOpen,
               text: "Read",
-              onTap: () => onTap(0),
-              isActive: currentIndex == 0,
+              onTap: () => onTap(1),
+              isActive: currentIndex == 1,
           ),
 
           _NavItem(
             icon: LucideIcons.headphones,
             text: "Audio",
-            onTap: () => onTap(1),
-            isActive: currentIndex == 1,
-          ),
-
-          _NavItem(
-            icon: LucideIcons.search,
-            text: "Search",
             onTap: () => onTap(2),
             isActive: currentIndex == 2,
           ),
 
           _NavItem(
-            icon: LucideIcons.settings,
-            text: "Settings",
+            icon: LucideIcons.search,
+            text: "Search",
             onTap: () => onTap(3),
             isActive: currentIndex == 3,
+          ),
+
+          _NavItem(
+            icon: LucideIcons.settings,
+            text: "Settings",
+            onTap: () => onTap(4),
+            isActive: currentIndex == 4,
           ),
 
         ]

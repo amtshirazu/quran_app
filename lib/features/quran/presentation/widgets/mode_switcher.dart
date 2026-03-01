@@ -28,28 +28,28 @@ class ModeSwitcher extends StatelessWidget {
       ),
       child: Row(
         children: [
-          buildButton("Translation", ReadingMode.translation),
+          buildButton("Reading", ReadingMode.reading),
           buildButton("Translation", ReadingMode.translation),
         ],
       ),
     );
   }
 
-  Widget buildButton(String text, ReadingMode translation) {
+  Widget buildButton(String text, ReadingMode mode) {
 
     return GestureDetector(
-      onTap: () => onChanged(translation),
+      onTap: () => onChanged(mode),
       child: Container(
         padding: EdgeInsets.symmetric(vertical : 12),
         decoration: BoxDecoration(
-          color: mode == translation ? Colors.grey : Colors.transparent,
+          color: mode == mode ? Colors.grey : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Center(
           child: Text(
             text,
             style: TextStyle(
-              color: mode == translation ? Colors.white : Colors.grey,
+              color: mode == mode ? Colors.white : Colors.grey,
               fontWeight: FontWeight.w600,
             ),
           ),

@@ -64,6 +64,8 @@ flutter:
   assets:
     - lib/assets/quran/scripts/
     - lib/assets/quran/translations/
+    - lib/assets/quran/metadata/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

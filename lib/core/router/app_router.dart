@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../app/app.dart';
 import '../../features/quran/presentation/screens/home_screen.dart';
+import '../../features/quran/presentation/screens/read_quran_screen.dart';
 
 
 
@@ -16,12 +15,8 @@ class AppRouter {
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
-            path: '/quran',
-            builder: (context, state) => const HomeScreen(),
-          ),
-          GoRoute(
             path: '/surah',
-            builder: (context, state) => const HomeScreen(),
+            builder: (context, state) => const ReadQuranScreen(),
           ),
           GoRoute(
             path: '/tafseer',
