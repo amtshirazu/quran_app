@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class QuranLocalDatasource {
 
   Future<List<dynamic>> loadQuranJson(String path) async {
-    final String response = await rootBundle.loadString("assets/$path");
+    final String response = await rootBundle.loadString(path);
     return jsonDecode(response);
   }
 

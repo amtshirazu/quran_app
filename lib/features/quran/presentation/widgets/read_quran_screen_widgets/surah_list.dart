@@ -49,11 +49,7 @@ class SurahList extends ConsumerWidget {
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 15, ),
               child: SurahTile(
-                surahNumber: surah.number,
-                nameArabic: surah.nameArabic,
-                translation: surah.translation,
-                transliteration: surah.nameEnglish,
-                totalAyahs: surah.totalAyahs,
+                surah: surah,
               ),
             );
           },

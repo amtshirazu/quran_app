@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/features/quran/presentation/state/providers.dart';
 import 'package:quran_app/features/quran/presentation/widgets/read_quran_screen_widgets/surah_verse_number_badge.dart';
 import 'package:quran_app/features/quran/presentation/widgets/read_quran_screen_widgets/surah_verses_badge.dart';
 
+import '../../../domain/models/surah.dart';
 
 
 
 
 
 
-class SurahTile extends StatelessWidget {
+
+class SurahTile extends ConsumerWidget {
   const SurahTile({
     super.key,
-    required this.surahNumber,
-    required this.transliteration,
-    required this.nameArabic,
-    required this.totalAyahs,
-    required this.translation,
+    required this.surah,
   });
 
-  final int surahNumber;
-  final int totalAyahs;
-  final String translation;
-  final String transliteration;
-  final String nameArabic;
+  final Surah surah;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ref.read(selectedSurahProvider.notifier).state = surah;
+        context.push("/readAyah");
+      },
       child: Card(
         color: Colors.white,
         elevation: 1,
@@ -40,7 +40,7 @@ class SurahTile extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SurahVerseNumberBadge(surahNumber: surahNumber),
+              SurahVerseNumberBadge(surahNumber: surah.number),
               SizedBox(width: 16),
 
               Expanded(
@@ -49,13 +49,13 @@ class SurahTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        transliteration,
+                        surah.nameEnglish,
                         style: textTheme.titleMedium?.copyWith(
                           color: AppColors.gray900,
                         ),
                       ),
                       Text(
-                        translation,
+                        surah.translation,
                         style: textTheme.bodyLarge?.copyWith(
                           color: AppColors.gray600,
                         ),
@@ -68,7 +68,7 @@ class SurahTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      nameArabic,
+                      surah.nameArabic,
                       style: textTheme.titleMedium?.copyWith(
                         color: AppColors.gray900,
                       ),
@@ -76,7 +76,7 @@ class SurahTile extends StatelessWidget {
                     SizedBox(height: 4,),
                     Row(
                       children: [
-                        SurahVersesBadge(totalAyahs: totalAyahs),
+                        SurahVersesBadge(totalAyahs: surah.totalAyahs),
                         SizedBox(width: 4,),
                         Icon(
                           LucideIcons.chevronRight,

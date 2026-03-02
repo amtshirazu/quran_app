@@ -28,11 +28,11 @@ class ReadHeaderSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              GestureDetector(
-                onTap: () {
+              IconButton(
+                onPressed: () {
                   context.go('/');
                 },
-                child: Icon(
+                icon: Icon(
                   LucideIcons.arrowLeft,
                   color: Colors.white,
                   size: 32,

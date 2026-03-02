@@ -1,4 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:quran_app/features/quran/presentation/screens/surah_detail_screen.dart';
+import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/header_section.dart';
 import '../../features/quran/presentation/screens/home_screen.dart';
 import '../../features/quran/presentation/screens/read_quran_screen.dart';
 
@@ -15,12 +17,12 @@ class AppRouter {
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
-            path: '/surah',
+            path: '/surahs',
             builder: (context, state) => const ReadQuranScreen(),
           ),
           GoRoute(
-            path: '/tafseer',
-            builder: (context, state) => const HomeScreen(),
+            path: '/readAyah',
+            builder: (context, state) => const SurahDetailScreen(),
           ),
           GoRoute(
             path: '/search',

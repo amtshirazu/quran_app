@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               context.go('/');
               break;
             case 1:
-              context.go('/surah');
+              context.go('/surahs');
               break;
             case 2:
               context.go('/audio');
