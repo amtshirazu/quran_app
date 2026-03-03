@@ -40,8 +40,8 @@ class _AyahTileState extends State<AyahTile> {
             Row(
               children: [
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 60,
+                  height: 60,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.emerald600,
@@ -93,7 +93,10 @@ class _AyahTileState extends State<AyahTile> {
                 widget.ayah.text,
                 style: textTheme.headlineLarge?.copyWith(
                   color: AppColors.gray900,
+                  fontFamily: "Uthmanic"
                 ),
+                textAlign: TextAlign.right,
+                softWrap: true,
               ),
             ),
 
@@ -106,6 +109,8 @@ class _AyahTileState extends State<AyahTile> {
                 style: textTheme.bodyMedium?.copyWith(
                   color: AppColors.gray700,
                 ),
+                textAlign: TextAlign.left,
+                softWrap: true,
               ),
             ),
 
@@ -127,7 +132,7 @@ class _AyahTileState extends State<AyahTile> {
                 SizedBox(width: 8,),
                 Expanded(child: SelectedButton(
                     icon: LucideIcons.messageSquare,
-                    text: "Translation")
+                    text: "Reflection")
                 ),
               ],
             ),

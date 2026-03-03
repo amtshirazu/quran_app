@@ -3,6 +3,7 @@ import 'package:quran_app/features/quran/presentation/screens/surah_detail_scree
 import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/header_section.dart';
 import '../../features/quran/presentation/screens/home_screen.dart';
 import '../../features/quran/presentation/screens/read_quran_screen.dart';
+import '../../features/quran/presentation/screens/settings_screen.dart';
 
 
 
@@ -30,7 +31,7 @@ class AppRouter {
           ),
           GoRoute(
             path: '/settings',
-            builder: (context, state) => const HomeScreen(),
+            builder: (context, state) => const SettingsScreen(),
           ),
           GoRoute(
             path: '/about',

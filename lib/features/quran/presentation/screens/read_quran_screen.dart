@@ -39,6 +39,7 @@ class _ReadQuranScreenState extends State<ReadQuranScreen> {
             SizedBox(height: 20,),
             Expanded(
               child: CustomScrollView(
+                cacheExtent: 1000,
                 slivers: [
                   _quickAccess(),
                   SurahList(),

@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: CustomScrollView(
+          cacheExtent: 1000,
           slivers: [
             _buildHeader(),
             _buildBody(),

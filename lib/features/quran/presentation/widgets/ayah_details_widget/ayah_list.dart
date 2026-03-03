@@ -22,7 +22,12 @@ class AyahList extends ConsumerWidget {
 
     if (ayahParams == null || translationParams == null) {
       return const SliverToBoxAdapter(
-        child: Center(child: Text("No surah selected")),
+        child: SizedBox(
+            height: 200,
+            child: Center(
+                child: Text("No surah selected")
+            ),
+        ),
       );
     }
 
@@ -73,6 +78,8 @@ class AyahList extends ConsumerWidget {
                      );
                    },
                  childCount: ayahs.length,
+                 addAutomaticKeepAlives: false,
+                 addRepaintBoundaries: true,
                ),
              );
            }

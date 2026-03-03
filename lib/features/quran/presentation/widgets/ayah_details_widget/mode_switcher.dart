@@ -32,8 +32,8 @@ class ModeSwitcher extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            buildButton("Translation", ReadingMode.reading),
-            buildButton("Reading", ReadingMode.translation),
+            buildButton("Translation", ReadingMode.translation),
+            buildButton("Reading", ReadingMode.reading),
           ],
         ),
       ),

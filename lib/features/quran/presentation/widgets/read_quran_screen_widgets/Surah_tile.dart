@@ -29,6 +29,7 @@ class SurahTile extends ConsumerWidget {
 
     return InkWell(
       onTap: () {
+        ref.read(searchQueryProvider.notifier).state = "";
         ref.read(selectedSurahProvider.notifier).state = surah;
         context.push("/readAyah");
       },

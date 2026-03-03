@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../../core/constants/app_colors.dart';
@@ -14,57 +15,62 @@ class QuickAccessCard extends StatelessWidget {
     required this.text,
     required this.bgColor,
     required this.fgColor,
+    required this.route,
   });
 
   final IconData icon;
   final String text;
   final Color bgColor;
   final Color fgColor;
+  final String route;
 
   @override
   Widget build(BuildContext context) {
 
     final textTheme = Theme.of(context).textTheme;
 
-    return Card(
-        color: Colors.white,
-        elevation: 6,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        clipBehavior: Clip.antiAlias,
+    return InkWell(
+      onTap: () => context.push(route),
+      child: Card(
+          color: Colors.white,
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          clipBehavior: Clip.antiAlias,
 
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
 
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  shape: BoxShape.circle,
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    color: fgColor,
+                    size: 24,
+                  ),
                 ),
-                child: Icon(
-                  icon,
-                  color: fgColor,
-                  size: 24,
-                ),
-              ),
 
-              SizedBox(height: 12),
+                SizedBox(height: 12),
 
-              Text(
-                text,
-                style: textTheme.headlineLarge?.copyWith(
-                  color: AppColors.gray900,
-                ),
-              )
-            ],
+                Text(
+                  text,
+                  style: textTheme.headlineLarge?.copyWith(
+                    color: AppColors.gray900,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      );
+    );
   }
 }

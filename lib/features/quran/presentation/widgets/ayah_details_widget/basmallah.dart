@@ -19,6 +19,7 @@ class Basmallah extends StatelessWidget {
             'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم',
             style: textTheme.titleLarge?.copyWith(
               color: AppColors.gray900,
+              fontFamily: "Uthmanic"
             ),
           ),
           SizedBox(height: 4),

@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/features/quran/presentation/state/providers.dart';
 
 
 
 
 
-class SearchField extends StatelessWidget {
+class SearchField extends ConsumerWidget {
   const SearchField({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
     return TextField(
+      onChanged: (value) {
+        ref.read(searchQueryProvider.notifier).state  = value;
+      },
       decoration: InputDecoration(
         hintText: "Search surah...",
         hintStyle: TextStyle(

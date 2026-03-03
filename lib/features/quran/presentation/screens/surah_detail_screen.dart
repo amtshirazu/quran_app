@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/header_section.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../state/reading_mode.dart';
 import '../widgets/ayah_details_widget/ayah_list.dart';
 import '../widgets/ayah_details_widget/basmallah.dart';
 import '../widgets/ayah_details_widget/mode_switcher.dart';
+import '../widgets/ayah_details_widget/surah_navigation_card.dart';
 import '../widgets/ayah_details_widget/surah_info.dart';
 
 
@@ -42,8 +44,8 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 
             Expanded(
               child: CustomScrollView(
+                cacheExtent: 1000,
                 slivers: [
-
                   SliverToBoxAdapter(
                     child:  SurahInfo(),
                   ),
@@ -57,10 +59,17 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                           setState(() {
                             readingMode = newMode;
                           });
+
+                          if (newMode == ReadingMode.reading) {
+                            context.push("/readAyah");
+                          } else {
+                            context.push("/readAyah");
+                          }
                         },
                       ),
                     ),
                   ),
+
                   SliverToBoxAdapter(
                     child: SizedBox(height: 20),
                   ),
@@ -72,6 +81,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                   ),
 
                   AyahList(),
+                  SurahNavigationCard(),
                 ]
               ),
             ),

@@ -29,7 +29,7 @@ class AyahHeaderSection extends ConsumerWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    context.pop();
+                    context.go("/surahs");
                   },
                   icon: Icon(
                     LucideIcons.arrowLeft,

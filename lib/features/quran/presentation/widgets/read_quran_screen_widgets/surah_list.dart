@@ -11,6 +11,7 @@ class SurahList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final surahAsync = ref.watch(surahListProvider);
+    final searchQuery = ref.watch(searchQueryProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return surahAsync.when(
@@ -29,6 +30,13 @@ class SurahList extends ConsumerWidget {
       ),
 
       data: (surahs) {
+
+        final filteredSurahs = surahs.where((surahs) {
+          final query = searchQuery.toLowerCase();
+          return surahs.nameArabic.toLowerCase().contains(query) ||
+              surahs.nameEnglish.toLowerCase().contains(query);
+        }).toList();
+
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -44,7 +52,7 @@ class SurahList extends ConsumerWidget {
               );
             }
 
-            final surah = surahs[index - 1];
+            final surah = filteredSurahs[index - 1];
 
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 15, ),
@@ -53,7 +61,7 @@ class SurahList extends ConsumerWidget {
               ),
             );
           },
-            childCount: surahs.length + 1,
+            childCount: filteredSurahs.length + 1,
           ),
         );
       },

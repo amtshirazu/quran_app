@@ -103,5 +103,5 @@ Provider<Map<String, dynamic>?>((ref) {
   };
 });
 
-
+final searchQueryProvider = StateProvider<String>((ref) => '');
 final selectedSurahProvider = StateProvider<Surah?>((ref) => null);

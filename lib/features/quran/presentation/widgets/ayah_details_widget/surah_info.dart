@@ -43,6 +43,7 @@ class SurahInfo extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 28,
                 color: Colors.white,
+                fontFamily: "Uthmanic"
               ),
             ),
             const SizedBox(height: 8),
