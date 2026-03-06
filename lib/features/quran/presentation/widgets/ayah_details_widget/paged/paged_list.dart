@@ -11,7 +11,7 @@ class PagedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use SliverList so it integrates perfectly with the parent CustomScrollView
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
             (context, index) {

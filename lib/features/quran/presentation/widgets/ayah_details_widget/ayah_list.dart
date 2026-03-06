@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/src/framework.dart';
 import '../../../../../core/widgets/Loading.dart';
-import '../../state/providers.dart';
+import '../../state/quran_providers.dart';
 import 'ayah_tile.dart';
 
 

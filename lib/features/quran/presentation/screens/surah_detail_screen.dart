@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quran_app/features/quran/presentation/state/providers.dart';
+import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
 import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/header_section.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../state/reading_mode.dart';
@@ -16,19 +16,19 @@ import '../widgets/ayah_details_widget/surah_info.dart';
 
 
 
-class SurahDetailScreen extends StatefulWidget {
+class SurahDetailScreen extends ConsumerStatefulWidget {
   const SurahDetailScreen({super.key});
 
   @override
-  State<SurahDetailScreen> createState() => _SurahDetailScreenState();
+  ConsumerState<SurahDetailScreen> createState() => _SurahDetailScreenState();
 }
 
-class _SurahDetailScreenState extends State<SurahDetailScreen> {
-
-  ReadingMode readingMode = ReadingMode.translation;
+class _SurahDetailScreenState extends ConsumerState<SurahDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final readingMode = ref.watch(readingModeProvider);
 
     return Scaffold(
       body: Container(
@@ -59,9 +59,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                       child: ModeSwitcher(
                         mode: readingMode,
                         onChanged: (newMode) {
-                          setState(() {
-                            readingMode = newMode;
-                          });
+                          ref.read(readingModeProvider.notifier).state = newMode;
                         },
                       ),
                     ),
@@ -83,12 +81,19 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                       Consumer(
                           builder: (context, ref, child) {
                             final surah = ref.watch(selectedSurahProvider);
+                            if (surah == null) return const SliverToBoxAdapter(child: SizedBox());
+
                             final pagesAsync = ref.watch(pagedListProvider(surah!.number));
 
                             return pagesAsync.when(
                               data: (pages) => PagedList(pages: pages),
-                              loading: () => const Center(child: CircularProgressIndicator()),
-                              error: (err, stack) => Center(child: Text('Error: $err')),
+                                loading: () => const SliverFillRemaining(
+                                  hasScrollBody: false,
+                                  child: Center(child: CircularProgressIndicator()),
+                                ),
+                                error: (err, stack) => SliverToBoxAdapter(
+                                    child: Center(child: Text('Error: $err')),
+                                ),
                             );
                           }
                       ),

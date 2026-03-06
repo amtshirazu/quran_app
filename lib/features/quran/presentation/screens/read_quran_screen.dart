@@ -24,29 +24,31 @@ class _ReadQuranScreenState extends State<ReadQuranScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.emerald50, Colors.white],
-          ),
-        ),
-
-        child: Column(
-          children: [
-            ReadHeaderSection(),
-            SizedBox(height: 20,),
-            Expanded(
-              child: CustomScrollView(
-                cacheExtent: 1000,
-                slivers: [
-                  _quickAccess(),
-                  SurahList(),
-                ],
-              ),
+      body: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [AppColors.emerald50, Colors.white],
             ),
-          ],
+          ),
+        
+          child: Column(
+            children: [
+              ReadHeaderSection(),
+              SizedBox(height: 20,),
+              Expanded(
+                child: CustomScrollView(
+                  cacheExtent: 1000,
+                  slivers: [
+                    _quickAccess(),
+                    SurahList(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
 
@@ -65,7 +67,7 @@ class _ReadQuranScreenState extends State<ReadQuranScreen> {
               context.go('/surahs');
               break;
             case 2:
-              context.go('/audio');
+              context.go('/audioHome');
               break;
             case 3:
               context.go('/search');

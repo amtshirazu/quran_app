@@ -1,0 +1,50 @@
+import 'package:just_audio/just_audio.dart';
+
+
+class AudioService {
+
+     final AudioPlayer _audioPlayer = AudioPlayer();
+     AudioPlayer get player => _audioPlayer;
+
+     Future<void> playVerse({
+       required String reciterFolder,
+       required int surah,
+       required int ayah,
+     }) async {
+       final url = buildUrl(
+           surah : surah,
+           ayah : ayah,
+           reciterFolder : reciterFolder
+       );
+       await playUrl(url);
+     }
+
+     Future<void> playUrl(String url) async {
+         await _audioPlayer.setUrl(url);
+         await _audioPlayer.play();
+     }
+
+
+     Future<void> pause() async {
+       await _audioPlayer.pause();
+     }
+
+     Future<void> stop() async {
+       await _audioPlayer.stop();
+     }
+
+     void dispose() {
+       _audioPlayer.dispose();
+     }
+
+     String buildUrl({
+       required int surah,
+       required int ayah,
+       required String reciterFolder,
+     }){
+       final surahStr = surah.toString().padLeft(3, '0');
+       final ayahStr = ayah.toString().padLeft(3, '0');
+
+       return "https://everyayah.com/data/$reciterFolder/$surahStr$ayahStr.mp3";
+     }
+}

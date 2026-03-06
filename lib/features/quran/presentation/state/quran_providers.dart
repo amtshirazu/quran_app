@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:quran_app/features/audio/presentation/state/audio_service.dart';
 import 'package:quran_app/features/quran/data/datasource/ayah_local_datasource.dart';
 import 'package:quran_app/features/quran/data/datasource/surah_local_datasource.dart';
 import 'package:quran_app/features/quran/data/repository/quran_metadata.dart';
 import 'package:quran_app/features/quran/data/repository/quran_repository.dart';
+import 'package:quran_app/features/quran/presentation/state/reading_mode.dart';
 import '../../data/datasource/translation_local_datasource.dart';
 import '../../data/repository/paged_repository.dart';
 import '../../data/repository/translation_repository.dart';
@@ -124,6 +127,10 @@ Provider<Map<String, dynamic>?>((ref) {
     "surahNumber": surah.number,
     "translationFile": "saheeh",
   };
+});
+
+final readingModeProvider = StateProvider<ReadingMode>((ref) {
+  return ReadingMode.translation;
 });
 
 final searchQueryProvider = StateProvider<String>((ref) => '');

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran_app/core/widgets/Loading.dart';
-import 'package:quran_app/features/quran/presentation/state/providers.dart';
+import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
 import 'package:quran_app/features/quran/presentation/widgets/read_quran_screen_widgets/Surah_tile.dart';
 import '../../../../../core/constants/app_colors.dart';
 
