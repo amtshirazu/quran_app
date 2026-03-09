@@ -26,7 +26,7 @@ class GreetingRow extends StatelessWidget {
               "May peace be upon you",
               style: TextStyle(
                 color: AppColors.emerald100,
-                fontSize: 13,
+                fontSize: 16,
               ),
             ),
           ],

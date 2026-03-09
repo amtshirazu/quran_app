@@ -105,16 +105,30 @@ class AudioService {
        required int surah,
        required int totalAyahs,
      }) async {
+
        await _audioPlayer.stop();
 
-       List<AudioSource> ayahs = List.generate(totalAyahs, (i) {
-          final ayahNum = (i + 1).toString().padLeft(3, '0');
-          final surahStr = surah.toString().padLeft(3, '0');
+       final surahStr = surah.toString().padLeft(3, '0');
 
-          final url = "https://everyayah.com/data/$reciterFolder/$surahStr$ayahNum.mp3";
+       List<AudioSource> ayahs = [];
 
-          return AudioSource.uri(Uri.parse(url));
-       });
+       if (surah != 1 && surah != 9 && reciterFolder != "warsh/warsh_yassin_al_jazaery_64kbps") {
+         final basmallahUrl =
+             "https://everyayah.com/data/$reciterFolder/001001.mp3";
+
+         ayahs.add(AudioSource.uri(Uri.parse(basmallahUrl)));
+       }
+
+       ayahs.addAll(
+         List.generate(totalAyahs, (i) {
+           final ayahStr = (i + 1).toString().padLeft(3, '0');
+
+           final url =
+               "https://everyayah.com/data/$reciterFolder/$surahStr$ayahStr.mp3";
+
+           return AudioSource.uri(Uri.parse(url));
+         }),
+       );
 
        await _audioPlayer.setAudioSources(ayahs);
        _hasLoadedSurah = true;

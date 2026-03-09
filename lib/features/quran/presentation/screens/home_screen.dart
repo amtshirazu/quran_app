@@ -22,52 +22,52 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.emerald50,
-              Colors.white,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.emerald50,
+                Colors.white,
+              ],
+            ),
+          ),
+          child: CustomScrollView(
+            cacheExtent: 1000,
+            slivers: [
+              _buildHeader(),
+              _buildBody(),
             ],
           ),
         ),
-        child: CustomScrollView(
-          cacheExtent: 1000,
-          slivers: [
-            _buildHeader(),
-            _buildBody(),
-          ],
+      
+        bottomNavigationBar: BottomNavbar(
+          currentIndex: selectedIndex,
+          onTap: (index) {
+            setState(() {
+              selectedIndex = index;
+            });
+      
+            switch (index) {
+              case 0:
+                context.go('/');
+                break;
+              case 1:
+                context.go('/surahs');
+                break;
+              case 2:
+                context.go('/audioHome');
+                break;
+              case 3:
+                context.go('/search');
+                break;
+              case 4:
+                context.go('/settings');
+                break;
+            }
+          },
         ),
-      ),
-
-      bottomNavigationBar: BottomNavbar(
-        currentIndex: selectedIndex,
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-
-          switch (index) {
-            case 0:
-              context.go('/');
-              break;
-            case 1:
-              context.go('/surahs');
-              break;
-            case 2:
-              context.go('/audioHome');
-              break;
-            case 3:
-              context.go('/search');
-              break;
-            case 4:
-              context.go('/settings');
-              break;
-          }
-        },
-      ),
     );
   }
 

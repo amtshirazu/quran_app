@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:quran_app/features/audio/domain/models/Reciters.dart';
 import 'package:quran_app/features/audio/presentation/state/audio_service.dart';
 import 'package:quran_app/features/quran/data/datasource/ayah_local_datasource.dart';
 import 'package:quran_app/features/quran/data/datasource/surah_local_datasource.dart';
@@ -11,6 +12,7 @@ import '../../data/datasource/translation_local_datasource.dart';
 import '../../data/repository/paged_repository.dart';
 import '../../data/repository/translation_repository.dart';
 import '../../domain/models/ayah.dart';
+import '../../domain/models/paged.dart';
 import '../../domain/models/surah.dart';
 import '../../domain/models/translation.dart';
 
@@ -37,26 +39,14 @@ FutureProvider((ref) async {
 });
 
 
-final pagedRepositoryProvider =
-Provider<PagedRepository>((ref) {
-  return PagedRepository();
+final pageAyahsProvider =
+FutureProvider.family<List<PagedAyah>, int>((ref, pageNumber) async {
+
+  return loadPageAyahs(pageNumber);
+
 });
 
 
-final pagedListProvider =
-FutureProvider.family((ref,surahId) async {
-  final repo = ref.watch(pagedRepositoryProvider);
-
-  try {
-    final allPages = await repo.loadPages();
-    print("Loaded ${allPages.length} surahs");
-    return allPages.where((p) => p.surahNumbers.contains(surahId)).toList();;
-  } catch (e, st) {
-    print("ERROR loading surahs: $e");
-    print(st);
-    rethrow;
-  }
-});
 
 final ayahRepositoryProvider =
     Provider<QuranRepository>((ref) {
@@ -133,3 +123,15 @@ final readingModeProvider = StateProvider<ReadingMode>((ref) {
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 final selectedSurahProvider = StateProvider<Surah?>((ref) => null);
+final defaultReciterProvider = Provider<Reciter?>((ref) =>
+    Reciter(
+      id: "abu_bakr_shaatree",
+      name: "Abu Bakr Ash-Shaatree",
+      arabicName: "أبو بكر الشاطري",
+      image: "lib/assets/reciters/5.jpg",
+      country: "Saudi Arabia",
+      style: "Hafs - Murattal",
+      totalSurahs: 114,
+      audioFolder: "Abu_Bakr_Ash-Shaatree_128kbps",
+    ),
+);

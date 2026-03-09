@@ -16,13 +16,33 @@ class QuickAccess extends ConsumerWidget {
 
     final lastRead = ref.watch(selectedSurahProvider);
     final surahListAsync = ref.watch(surahListProvider);
-
     Surah? surahOftheDay;
+
+    final defaultSurahOfTheDay = Surah(
+      number: 18,
+      nameArabic: "الكهف",
+      nameEnglish: "Al-Kahf",
+      totalAyahs: 110,
+      translation: 'The Cave',
+      revelationType: 'Meccan',
+    );
+
+    final defaultLastRead = Surah(
+      number: 2,
+      nameArabic: "البقرة",
+      nameEnglish: "Al-Baqara",
+      totalAyahs: 286,
+      translation: 'The Cow',
+      revelationType: 'Madinan',
+    );
 
     if(surahListAsync is AsyncData<List<Surah>>){
       final surahList = surahListAsync.value;
       surahOftheDay = getSurahOfTheDay(surahList);
     }
+
+    final surahForLastRead = lastRead ?? defaultLastRead;
+    final surahForToday = surahOftheDay ?? defaultSurahOfTheDay;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -40,6 +60,7 @@ class QuickAccess extends ConsumerWidget {
             children: [
               Expanded(
                 child: QuickAccessCard(
+                  surah: surahForLastRead,
                   bgColor: AppColors.emerald100,
                   fgColor: AppColors.emerald600,
                   icon: LucideIcons.book,
@@ -50,6 +71,7 @@ class QuickAccess extends ConsumerWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: QuickAccessCard(
+                  surah: surahForToday,
                   bgColor: AppColors.blue100,
                   fgColor: AppColors.blue600,
                   icon: LucideIcons.bookOpen,

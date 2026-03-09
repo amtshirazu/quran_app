@@ -10,7 +10,7 @@ class HeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 60, 24, 30),
+      padding: const EdgeInsets.fromLTRB(24, 50, 24, 0),
       decoration: const BoxDecoration(
         color: AppColors.emerald600,
         borderRadius: BorderRadius.vertical(
@@ -18,9 +18,10 @@ class HeaderSection extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: const [
           GreetingRow(),
-          SizedBox(height: 20),
+          SizedBox(height: 30),
           NextPrayerCard(),
         ],
       ),

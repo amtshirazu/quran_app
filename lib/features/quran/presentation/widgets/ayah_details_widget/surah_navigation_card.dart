@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/paged/paged_surah_map.dart';
+import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/paged/quran_paged_reader_screen.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../state/quran_providers.dart';
 
@@ -70,9 +72,7 @@ class SurahNavigationCard extends ConsumerWidget {
                       Expanded(
                         child: TextButton(
                           onPressed: () {
-                            ref
-                                .read(selectedSurahProvider.notifier)
-                                .state = previousSurah;
+                            ref.read(selectedSurahProvider.notifier).state = previousSurah;
                             context.go("/readAyah");
                           },
                           child: Column(
@@ -117,9 +117,7 @@ class SurahNavigationCard extends ConsumerWidget {
                       Expanded(
                         child: TextButton(
                           onPressed: () {
-                            ref
-                                .read(selectedSurahProvider.notifier)
-                                .state = nextSurah;
+                            ref.read(selectedSurahProvider.notifier).state = nextSurah;
                             context.go("/readAyah");
                           },
                           child: Column(

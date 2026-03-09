@@ -14,9 +14,7 @@ class ReciterAudioScreen extends ConsumerWidget {
     final selectedReciter = ref.watch(selectedReciterProvider);
 
     if (selectedReciter == null) {
-      return const Scaffold(
-        body: Center(child: Text("No reciter selected")),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(

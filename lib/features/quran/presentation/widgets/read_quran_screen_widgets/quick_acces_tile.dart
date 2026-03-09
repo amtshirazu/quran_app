@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../../core/constants/app_colors.dart';
+import '../../../domain/models/surah.dart';
+import '../../state/quran_providers.dart';
 
 
 
 
 
-class QuickAccessCard extends StatelessWidget {
+class QuickAccessCard extends ConsumerWidget {
   const QuickAccessCard({
     super.key,
     required this.icon,
@@ -14,6 +18,7 @@ class QuickAccessCard extends StatelessWidget {
     required this.sublabel,
     required this.bgColor,
     required this.fgColor,
+    required this.surah,
   });
 
   final IconData icon;
@@ -21,15 +26,17 @@ class QuickAccessCard extends StatelessWidget {
   final String sublabel;
   final Color bgColor;
   final Color fgColor;
+  final Surah surah;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
     final textTheme = Theme.of(context).textTheme;
 
     return InkWell(
       onTap: () {
-
+        ref.read(selectedSurahProvider.notifier).state = surah;
+        context.push("/readAyah");
       },
       child: Card(
         color: Colors.white,
@@ -74,6 +81,7 @@ class QuickAccessCard extends StatelessWidget {
                       sublabel,
                       style: textTheme.bodyMedium?.copyWith(
                         color: AppColors.gray900,
+                        fontSize: 12,
                       ),
                     ),
                   ],
