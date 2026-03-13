@@ -30,7 +30,6 @@ class SurahList extends ConsumerWidget {
         ),
       ),
 
-
       data: (surahs) {
         final filteredSurahs = surahs.where((s) {
           final query = searchQuery.toLowerCase();
@@ -43,37 +42,24 @@ class SurahList extends ConsumerWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15, 20, 15, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "ALL SURAHS",
-                      style: textTheme.titleMedium?.copyWith(
-                        color: AppColors.gray700,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    ModeSwitcher(
-                      mode: ref.watch(readingModeProvider),
-                      onChanged: (newMode) =>
-                      ref.read(readingModeProvider.notifier).state = newMode,
-                    ),
-                  ],
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ModeSwitcher(
+                    mode: ref.watch(readingModeProvider),
+                    onChanged: (newMode) =>
+                        ref.read(readingModeProvider.notifier).state = newMode,
+                  ),
                 ),
               ),
             ),
 
             SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: SurahTile(surah: filteredSurahs[index]),
-                  );
-                },
-                childCount: filteredSurahs.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: SurahTile(surah: filteredSurahs[index]),
+                );
+              }, childCount: filteredSurahs.length),
             ),
           ],
         );

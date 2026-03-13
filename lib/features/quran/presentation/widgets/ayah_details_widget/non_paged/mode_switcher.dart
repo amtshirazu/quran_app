@@ -23,8 +23,7 @@ class ModeSwitcher extends StatelessWidget {
     return SizedBox(
       width: 225,
       child: Container(
-        margin: EdgeInsets.only(right: 5),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: AppColors.gray700,
           borderRadius: BorderRadius.circular(30),
@@ -45,7 +44,7 @@ class ModeSwitcher extends StatelessWidget {
     return GestureDetector(
       onTap: () => onChanged(newMode),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical : 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical : 8),
         decoration: BoxDecoration(
           color: mode == newMode ? AppColors.emerald500.withOpacity(0.5): Colors.transparent,
           borderRadius: BorderRadius.circular(24),

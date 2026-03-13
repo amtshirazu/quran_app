@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/paged/single_paged_render.dart';
 import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/paged/paged_surah_map.dart';
+import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../audio/presentation/state/audio_providers.dart';
 import '../../../state/quran_providers.dart';
 
@@ -76,19 +77,53 @@ class _QuranPagedReaderScreenState
           error: (e, _) => Center(child: Text(e.toString())),
 
           data: (ayahs) {
-            return QuranPage(
-              svgAsset:
-                  "lib/assets/quran/hafs/${pageNumber.toString().padLeft(3, '0')}.svg",
-              ayahs: ayahs,
-              onTapAyah: (ayah) {
-                ref
-                    .read(currentPlayingAyahProvider.notifier)
-                    .state = AyahIdentifier(
-                  surah: ayah.surah,
-                  ayah: ayah.ayah,
-                  page: ayah.page,
-                );
-              },
+            return Column(
+              children: [
+                Expanded(
+                  child: QuranPage(
+                    svgAsset:
+                        "lib/assets/quran/hafs/${pageNumber.toString().padLeft(3, '0')}.svg",
+                    ayahs: ayahs,
+                    onTapAyah: (ayah) {
+                      ref
+                          .read(currentPlayingAyahProvider.notifier)
+                          .state = AyahIdentifier(
+                        surah: ayah.surah,
+                        ayah: ayah.ayah,
+                        page: ayah.page,
+                      );
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      Divider(
+                        color: AppColors.gray400,
+                        thickness: 2,
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          ayahs.first.page.toString(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.gray400,
+                          ),
+                        ),
+                      ),
+
+                      Divider(
+                        color: AppColors.gray400,
+                        thickness: 2,
+                      )
+                    ],
+                  ),
+                ),
+              ]
             );
           },
         );
