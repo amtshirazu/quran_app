@@ -4,19 +4,28 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
 import 'package:quran_app/core/theme/app_theme.dart';
+import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
 import 'package:quran_app/features/quran/presentation/state/translation_provider.dart';
 import 'package:quran_app/features/settings/presentation/state/display_settings_provider.dart';
+import '../../../audio/presentation/state/audio_providers.dart';
 import '../widgets/settings_card.dart';
 import '../widgets/settings_header.dart';
 import '../widgets/settings_row.dart';
 import '../widgets/settings_section_title.dart';
 import '../widgets/settings_stepper_row.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _isStreaming = false;
+
+  @override
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     final isDarkMode = themeMode == ThemeMode.dark;
 
@@ -24,6 +33,11 @@ class SettingsScreen extends ConsumerWidget {
     final String translationSubtitle = selectedTranslations.length > 1
         ? 'Multiple (${selectedTranslations.length})'
         : 'Sahih International';
+
+    final defaultReciter = ref.watch(defaultReciterProvider);
+    final String reciterSubtitle = defaultReciter != null
+        ? defaultReciter.name
+        : 'Abu Bakr Ash-Shaatree';
 
     final quranScript = ref.watch(quranScriptProvider);
     final ayahTextSize = ref.watch(ayahTextSizeProvider);
@@ -91,12 +105,11 @@ class SettingsScreen extends ConsumerWidget {
                 SettingsRow(
                   icon: LucideIcons.volume2,
                   title: 'Default Reciter',
-                  showDivider: false,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Alafasy (Select...)',
+                        reciterSubtitle,
                         style: TextStyle(
                           color: isDarkMode ? Colors.white70 : AppColors.gray600,
                           fontSize: 13,
@@ -106,7 +119,22 @@ class SettingsScreen extends ConsumerWidget {
                       const Icon(Icons.chevron_right, color: AppColors.gray400, size: 20),
                     ],
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/selectReciter');
+                  },
+                ),
+                SettingsRow(
+                  icon: LucideIcons.wifi,
+                  title: 'Streaming',
+                  subtitle: 'Stream audio instead of downloading',
+                  showDivider: false,
+                  trailing: Checkbox(
+                    value: _isStreaming,
+                    activeColor: AppColors.emerald600,
+                    onChanged: (val) {
+                      setState(() => _isStreaming = val ?? false);
+                    },
+                  ),
                 ),
               ],
             ),

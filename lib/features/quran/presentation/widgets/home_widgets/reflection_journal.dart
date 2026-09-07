@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_spacing.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart';
 import '../../../../../core/constants/app_colors.dart';
 
@@ -13,22 +14,28 @@ class ReflectionJournalCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final reflectionStats = ref.watch(reflectionStatsProvider);
     final totalCount = reflectionStats['thisWeek'].toString();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.only(left: 15, right: 15, bottom: 25, top: 15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.size16),
+        side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
       ),
       clipBehavior: Clip.antiAlias,
-      elevation: 6,
+      elevation: isDark ? 0 : 6,
+      color: isDark ? AppTheme.darkSurface : null,
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.size20),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.deepGreen, AppColors.emerald600],
-          ),
+        decoration: BoxDecoration(
+          color: isDark ? AppTheme.darkSurface : null,
+          gradient: isDark
+              ? null
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.deepGreen, AppColors.emerald600],
+                ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,7 +85,7 @@ class ReflectionJournalCard extends ConsumerWidget {
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.white.withAlpha(26),
+                backgroundColor: isDark ? AppColors.emerald600 : Colors.white.withAlpha(26),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 6,

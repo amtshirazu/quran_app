@@ -10,6 +10,7 @@ class Reciter {
   final String image;
   final String country;
   final String style;
+  final String riwayah;
   final int totalSurahs;
   final String audioFolder;
   final String serverUrl;
@@ -21,6 +22,7 @@ class Reciter {
     required this.image,
     required this.country,
     required this.style,
+    required this.riwayah,
     required this.totalSurahs,
     required this.audioFolder,
     required this.serverUrl,

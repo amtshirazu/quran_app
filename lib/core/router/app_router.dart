@@ -16,6 +16,7 @@ import 'package:quran_app/features/quran/presentation/screens/read_quran_screen.
 import 'package:quran_app/features/quran/presentation/screens/surah_detail_screen.dart';
 import 'package:quran_app/features/reflection/presentation/screens/reflection_screen.dart';
 import 'package:quran_app/features/search/presentation/screens/search_screen.dart';
+import 'package:quran_app/features/settings/presentation/screens/reciter_selection_screen.dart';
 import 'package:quran_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:quran_app/features/settings/presentation/screens/translations_screen.dart';
 
@@ -73,6 +74,10 @@ class AppRouter {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/selectReciter',
+        builder: (context, state) => const ReciterSelectionScreen(),
       ),
       GoRoute(
         path: '/translations',

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
 
 class ProfileHeader extends ConsumerWidget {
@@ -19,24 +20,27 @@ class ProfileHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final String displayName = name ?? ref.watch(profileNameProvider);
     final sinceAsync = ref.watch(profileSinceProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 60, 24, 32),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.deepGreen,
-            AppColors.emerald600,
-          ],
-        ),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkScaffold : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppColors.deepGreen,
+                  AppColors.emerald600,
+                ],
+              ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
       ),
       child: Column(
         children: [
-          /// App Bar Title Row
           Row(
             children: [
               IconButton(
@@ -64,7 +68,6 @@ class ProfileHeader extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
 
-          /// Profile Avatar Circle
           Container(
             width: 72,
             height: 72,
@@ -77,7 +80,6 @@ class ProfileHeader extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
-          /// Profile Name
           Text(
             displayName,
             style: const TextStyle(
@@ -88,7 +90,6 @@ class ProfileHeader extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
 
-          /// Profile Joined Date
           Text(
             since ?? (sinceAsync.asData?.value ?? ''),
             style: const TextStyle(

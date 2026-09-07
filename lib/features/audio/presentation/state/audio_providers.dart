@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:quran_app/core/database/database_helper.dart';
 import 'package:quran_app/features/audio/data/reciters_list.dart';
 import 'package:quran_app/features/audio/domain/models/Reciters.dart';
 import 'package:quran_app/features/audio/presentation/state/repeat_states.dart';
@@ -66,3 +67,38 @@ final repeatModeProvider = StateProvider<RepeatStates>(
 );
 
 final volumeProvider = StateProvider<double>((ref) => 0.7);
+
+class DefaultReciterNotifier extends StateNotifier<Reciter?> {
+  DefaultReciterNotifier() : super(_initialReciter) {
+    _loadSaved();
+  }
+
+  static final _initialReciter = reciters.firstWhere(
+    (r) => r.id == "abu_bakr_shaatree",
+    orElse: () => reciters.first,
+  );
+
+  Future<void> _loadSaved() async {
+    try {
+      final savedId =
+          await DatabaseHelper.instance.getSetting('default_reciter_id');
+      if (savedId != null && savedId.isNotEmpty) {
+        final found = reciters.firstWhere(
+          (r) => r.id == savedId,
+          orElse: () => _initialReciter,
+        );
+        state = found;
+      }
+    } catch (_) {}
+  }
+
+  Future<void> setReciter(Reciter reciter) async {
+    state = reciter;
+    await DatabaseHelper.instance.setSetting('default_reciter_id', reciter.id);
+  }
+}
+
+final defaultReciterProvider =
+    StateNotifierProvider<DefaultReciterNotifier, Reciter?>((ref) {
+  return DefaultReciterNotifier();
+});

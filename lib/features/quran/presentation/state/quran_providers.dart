@@ -35,19 +35,6 @@ final readingModeProvider = StateProvider<ReadingMode>((ref) {
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 final selectedSurahProvider = StateProvider<Surah?>((ref) => null);
-final defaultReciterProvider = Provider<Reciter?>(
-  (ref) => Reciter(
-    id: "abu_bakr_shaatree",
-    name: "Abu Bakr Ash-Shaatree",
-    arabicName: "أبو بكر الشاطري",
-    image: "assets/reciters/shatri.jpg",
-    country: "Saudi Arabia",
-    style: "Hafs - Murattal",
-    totalSurahs: 114,
-    audioFolder: "Abu_Bakr_Ash-Shaatree_128kbps",
-    serverUrl: "https://server11.mp3quran.net/shatri",
-  ),
-);
 
 final currentPlayingAyahProvider = StateProvider<AyahIdentifier?>(
   (ref) => null,

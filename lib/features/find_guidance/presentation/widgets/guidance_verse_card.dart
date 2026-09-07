@@ -7,6 +7,7 @@ import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_service.dart';
 import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
+import 'package:quran_app/features/settings/presentation/state/display_settings_provider.dart';
 import '../../domain/model/guidance_verse.dart';
 import 'guidance_bookmark_dialog.dart';
 
@@ -36,6 +37,13 @@ class GuidanceVerseCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final quranScript = ref.watch(quranScriptProvider);
+    final ayahTextSize = ref.watch(ayahTextSizeProvider);
+    final translationTextSize = ref.watch(translationTextSizeProvider);
+    final referenceTextSize = ref.watch(referenceTextSizeProvider);
+
+    final fontName = quranScript == 'IndoPak' ? "Indo Park" : "Uthmanic";
+
     final isBookmarked = ref.watch(
       isAyahBookmarkedProvider((
         surahId: verse.surahNum,
@@ -63,28 +71,30 @@ class GuidanceVerseCard extends ConsumerWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            /// Arabic Verse Text
             if (verse.arabicText != null && verse.arabicText!.isNotEmpty) ...[
               Text(
                 verse.arabicText!,
                 textAlign: TextAlign.center,
                 textDirection: TextDirection.rtl,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: ayahTextSize,
                   height: 1.8,
                   fontWeight: FontWeight.bold,
                   color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
-                  fontFamily: 'Uthmanic',
+                  fontFamily: fontName,
                 ),
               ),
               const SizedBox(height: 12),
             ],
 
+            /// English Translation
             if (verse.translation != null && verse.translation!.isNotEmpty) ...[
               Text(
                 '"${verse.translation}"',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: translationTextSize,
                   height: 1.5,
                   fontStyle: FontStyle.italic,
                   color: isDark ? AppTheme.darkTextSecondary : AppColors.gray700,
@@ -93,17 +103,19 @@ class GuidanceVerseCard extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
 
+            /// Reference (Surah & Verse Number)
             Text(
               'Surah ${verse.surahNum}, Verse ${verse.ayahNum}',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: referenceTextSize,
                 color: isDark ? AppTheme.darkTextSecondary : AppColors.gray500,
                 fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 16),
 
+            /// "Why this verse?" Container
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -137,6 +149,7 @@ class GuidanceVerseCard extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
+            /// Action Buttons
             Row(
               children: [
                 Expanded(

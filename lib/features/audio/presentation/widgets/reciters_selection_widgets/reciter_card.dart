@@ -116,7 +116,7 @@ class ReciterCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          reciter.style,
+                          reciter.riwayah,
                           style: TextStyle(
                             fontSize: AppSpacing.size11,
                             color: isDark ? AppTheme.darkTextSecondary : Colors.black,
