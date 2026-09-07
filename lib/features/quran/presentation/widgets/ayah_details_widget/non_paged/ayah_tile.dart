@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/domain/model/bookmark.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_service.dart';
@@ -12,6 +13,7 @@ import 'package:quran_app/features/quran/presentation/state/translation_provider
 import 'package:quran_app/features/quran/presentation/widgets/ayah_details_widget/non_paged/selectedButton.dart';
 import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart';
 import 'package:quran_app/features/reflection/presentation/widgets/reflection_note_dialog.dart';
+import 'package:quran_app/features/settings/presentation/state/display_settings_provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../../../../../../core/constants/app_spacing.dart';
@@ -40,7 +42,6 @@ class _AyahTileState extends ConsumerState<AyahTile> {
     final selectedSurah = ref.read(selectedSurahProvider);
     if (selectedSurah == null) return;
 
-    // Check for existing reflection
     final reflections = await ref.read(reflectionsProvider.future);
     String? existingContent;
 
@@ -57,7 +58,6 @@ class _AyahTileState extends ConsumerState<AyahTile> {
 
     if (!mounted) return;
 
-    // Show Reflection Dialog
     final content = await showReflectionDialog(
       context,
       surahName: selectedSurah.nameEnglish,
@@ -67,7 +67,6 @@ class _AyahTileState extends ConsumerState<AyahTile> {
 
     if (content == null) return;
 
-    // Save to Database
     final reflectionService = ref.read(reflectionServiceProvider);
     await reflectionService.addOrUpdateReflection(
       surahId: selectedSurah.number,
@@ -75,15 +74,22 @@ class _AyahTileState extends ConsumerState<AyahTile> {
       content: content,
     );
 
-    // Refresh UI and Stats
     ref.invalidate(reflectionsProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final selectedSurah = ref.watch(selectedSurahProvider);
     if (selectedSurah == null) return const SizedBox.shrink();
+
+    final quranScript = ref.watch(quranScriptProvider);
+    final ayahTextSize = ref.watch(ayahTextSizeProvider);
+    final translationTextSize = ref.watch(translationTextSizeProvider);
+    final showAyahBefore = ref.watch(showAyahBeforeTranslationProvider);
+
+    final fontName = quranScript == 'IndoPak' ? "Indo Park" : "Uthmanic";
 
     // Fetch Ayah Text
     String ayahText = quran.getVerse(
@@ -91,6 +97,7 @@ class _AyahTileState extends ConsumerState<AyahTile> {
       widget.ayahNumber,
       verseEndSymbol: false,
     );
+
     // Fetch active translations using Riverpod provider
     Widget translationWidget = ref
         .watch(
@@ -110,10 +117,10 @@ class _AyahTileState extends ConsumerState<AyahTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (isSecondary) ...[
-                      const Divider(
+                      Divider(
                         height: 16,
                         thickness: 0.8,
-                        color: Color(0xFFE5E7EB),
+                        color: isDark ? AppTheme.darkBorder : const Color(0xFFE5E7EB),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 4.0),
@@ -131,8 +138,8 @@ class _AyahTileState extends ConsumerState<AyahTile> {
                     Text(
                       t.text,
                       style: textTheme.bodyMedium?.copyWith(
-                        color: AppColors.gray700,
-                        fontSize: AppSpacing.size12,
+                        color: isDark ? AppTheme.darkTextSecondary : AppColors.gray700,
+                        fontSize: translationTextSize,
                         fontStyle: FontStyle.italic,
                       ),
                       textAlign: TextAlign.left,
@@ -152,7 +159,6 @@ class _AyahTileState extends ConsumerState<AyahTile> {
                 (index) => Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Container(
-                    // last line shorter for a natural "paragraph" look
                     width: index == 2 ? 150 : double.infinity,
                     height: 12.0,
                     color: Colors.white,
@@ -191,9 +197,13 @@ class _AyahTileState extends ConsumerState<AyahTile> {
         }
       },
       child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-        color: Colors.white,
-        elevation: 1,
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        color: isDark ? AppTheme.darkSurface : Colors.white,
+        elevation: isDark ? 0 : 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Column(
@@ -201,8 +211,8 @@ class _AyahTileState extends ConsumerState<AyahTile> {
               Row(
                 children: [
                   Container(
-                    width: 50,
-                    height: 50,
+                    width: 40,
+                    height: 40,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppColors.emerald600,
@@ -210,8 +220,10 @@ class _AyahTileState extends ConsumerState<AyahTile> {
                     child: Center(
                       child: Text(
                         "${widget.ayahNumber}",
-                        style: textTheme.titleLarge?.copyWith(
-                          fontSize: AppSpacing.size12,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
                         ),
                       ),
                     ),
@@ -296,22 +308,42 @@ class _AyahTileState extends ConsumerState<AyahTile> {
                 ],
               ),
               const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  ayahText,
-                  style: textTheme.headlineLarge?.copyWith(
-                    color: AppColors.gray900,
-                    fontFamily: "Uthmanic",
-                    fontSize: AppSpacing.size18,
+              if (showAyahBefore) ...[
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    ayahText,
+                    style: textTheme.headlineLarge?.copyWith(
+                      color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
+                      fontFamily: fontName,
+                      fontSize: ayahTextSize,
+                    ),
+                    textAlign: TextAlign.right,
                   ),
-                  textAlign: TextAlign.right,
                 ),
+                const SizedBox(height: 8),
+                Align(alignment: Alignment.centerLeft, child: translationWidget),
+              ] else ...[
+                Align(alignment: Alignment.centerLeft, child: translationWidget),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    ayahText,
+                    style: textTheme.headlineLarge?.copyWith(
+                      color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
+                      fontFamily: fontName,
+                      fontSize: ayahTextSize,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 8),
+              Divider(
+                color: isDark ? AppTheme.darkBorder : AppColors.gray200,
+                thickness: 1,
               ),
-              const SizedBox(height: 8),
-              Align(alignment: Alignment.centerLeft, child: translationWidget),
-              const SizedBox(height: 8),
-              const Divider(color: AppColors.gray200, thickness: 1),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -319,9 +351,7 @@ class _AyahTileState extends ConsumerState<AyahTile> {
                     child: SelectedButton(
                       icon: LucideIcons.bookmarkCheck,
                       text: "Tafseer",
-                      onTap: () {
-                        // Logic for Tafseer
-                      },
+                      onTap: () {},
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -329,7 +359,7 @@ class _AyahTileState extends ConsumerState<AyahTile> {
                     child: SelectedButton(
                       icon: LucideIcons.messageSquare,
                       text: "Reflection",
-                      onTap: _handleReflectionTap, // Integrated logic
+                      onTap: _handleReflectionTap,
                     ),
                   ),
                 ],

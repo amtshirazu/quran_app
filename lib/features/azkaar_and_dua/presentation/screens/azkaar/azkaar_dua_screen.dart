@@ -11,9 +11,7 @@ class AzkaarDuaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFFBFDFF,
-      ), // Very light blue-grey background
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const AzkaarDuaAppBar(),
       body: SingleChildScrollView(
         child: Column(
@@ -32,12 +30,11 @@ class AzkaarDuaScreen extends StatelessWidget {
               },
             ),
 
-            // DUA SELECTION (Balanced with 3 tags)
+            // DUA SELECTION
             SelectionCard(
               title: 'Duas',
               subtitle: 'Supplications from the Holy Quran for every need',
               icon: Icons.menu_book_rounded,
-              // Balanced with 3 tags as discussed
               tags: const [
                 'Prophetic (Rabbana)',
                 'For Success',
@@ -50,7 +47,6 @@ class AzkaarDuaScreen extends StatelessWidget {
 
             const BenefitsCard(),
 
-            // Adding a little extra padding at the bottom for scroll breathability
             const SizedBox(height: 20),
           ],
         ),

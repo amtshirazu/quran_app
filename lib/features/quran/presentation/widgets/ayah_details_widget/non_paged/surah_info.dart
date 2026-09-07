@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
-import '../../../../../../core/constants/app_spacing.dart';
+import 'package:quran_app/core/constants/app_spacing.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../../state/quran_providers.dart';
 
 class SurahInfo extends ConsumerWidget {
@@ -11,20 +12,26 @@ class SurahInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final surahMetadata = ref.watch(selectedSurahProvider);
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.size16),
+        side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
       ),
-      elevation: 6,
+      elevation: isDark ? 0 : 6,
+      color: isDark ? AppTheme.darkSurface : null,
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.emerald500, AppColors.emerald600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: isDark ? AppTheme.darkSurface : null,
+          gradient: isDark
+              ? null
+              : const LinearGradient(
+                  colors: [AppColors.emerald500, AppColors.emerald600],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
           borderRadius: BorderRadius.circular(AppSpacing.size16),
         ),
         padding: const EdgeInsets.all(AppSpacing.size20),
@@ -35,7 +42,7 @@ class SurahInfo extends ConsumerWidget {
               surahMetadata?.nameArabic ?? "",
               style: TextStyle(
                 fontSize: AppSpacing.size22,
-                color: Colors.white,
+                color: isDark ? AppTheme.darkTextPrimary : Colors.white,
                 fontFamily: "Uthmanic",
               ),
             ),
@@ -43,7 +50,7 @@ class SurahInfo extends ConsumerWidget {
             Text(
               surahMetadata?.nameEnglish ?? "",
               style: textTheme.bodyMedium?.copyWith(
-                color: AppColors.gray400,
+                color: isDark ? AppTheme.darkTextSecondary : AppColors.gray400,
                 fontSize: AppSpacing.size16,
               ),
             ),
@@ -51,7 +58,7 @@ class SurahInfo extends ConsumerWidget {
             Text(
               surahMetadata?.translation ?? "",
               style: textTheme.bodyMedium?.copyWith(
-                color: AppColors.gray400,
+                color: isDark ? AppTheme.darkTextSecondary : AppColors.gray400,
                 fontSize: AppSpacing.size14,
               ),
             ),
@@ -62,18 +69,18 @@ class SurahInfo extends ConsumerWidget {
                 Text(
                   '${surahMetadata?.totalAyahs} Verses',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: isDark ? AppTheme.darkTextPrimary : Colors.white,
                     fontSize: AppSpacing.size14,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
                 const SizedBox(width: 4),
-                Text('•', style: TextStyle(color: Colors.white)),
+                Text('•', style: TextStyle(color: isDark ? AppTheme.darkTextPrimary : Colors.white)),
                 const SizedBox(width: 4),
                 Text(
                   surahMetadata?.revelationType ?? "",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: isDark ? AppTheme.darkTextPrimary : Colors.white,
                     fontSize: AppSpacing.size14,
                     fontStyle: FontStyle.italic,
                   ),

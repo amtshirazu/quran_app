@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class ReflectionJourneyCard extends StatelessWidget {
   const ReflectionJourneyCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkSurface : null,
         borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            Color(0xFFF59E0B), // Vibrant Amber/Orange
-            Color(0xFFD97706), // Deeper Amber
-          ],
-        ),
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  AppColors.deepGreen,
+                  AppColors.emerald600,
+                ],
+              ),
       ),
       child: Row(
         children: [
-          // Icon Container
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(51),
               borderRadius: BorderRadius.circular(15),
             ),
             child: const Icon(
@@ -36,13 +43,11 @@ class ReflectionJourneyCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-
-          // Text Content
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
+              children: const [
+                Text(
                   "Your Personal Journey",
                   style: TextStyle(
                     color: Colors.white,
@@ -50,11 +55,11 @@ class ReflectionJourneyCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   "Write reflections as you read the Quran. Track your spiritual growth and insights over time.",
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: AppColors.emerald100,
                     fontSize: 13,
                     height: 1.4,
                   ),

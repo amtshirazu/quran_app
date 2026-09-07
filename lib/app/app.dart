@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran_app/features/prayer_times/presentation/states/prayer_time_provider.dart';
-import 'package:quran_app/features/settings/presentation/state/theme_provider.dart';
 import '../core/router/app_router.dart';
 import '../core/theme/app_theme.dart';
 import '../features/audio/presentation/state/audio_providers.dart';
+import '../features/settings/presentation/state/display_settings_provider.dart';
 
 class QuranApp extends ConsumerStatefulWidget {
   const QuranApp({super.key});

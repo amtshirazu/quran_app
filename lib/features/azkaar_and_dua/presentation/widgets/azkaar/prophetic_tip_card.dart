@@ -1,47 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class PropheticTipCard extends StatelessWidget {
   const PropheticTipCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF9C4).withOpacity(0.4),
+        color: isDark ? AppTheme.darkSurface : const Color(0xFFFFF9C4).withAlpha(102),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFFFF176).withOpacity(0.5)),
+        border: Border.all(
+          color: isDark ? AppTheme.darkBorder : const Color(0xFFFFF176).withAlpha(128),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.lightbulb_outline, color: Colors.orange, size: 20),
-              SizedBox(width: 8),
+              const Icon(Icons.lightbulb_outline, color: AppColors.emerald600, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'Tip',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: isDark ? AppTheme.darkTextPrimary : Colors.black87,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'The Prophet ﷺ said: "Whoever says \'SubhanAllahi wa bihamdihi\' (Glory and praise be to Allah) one hundred times a day, his sins will be forgiven even if they are like the foam of the sea."',
             style: TextStyle(
               fontSize: 14,
               height: 1.5,
-              color: Color(0xFF5D4037),
+              color: isDark ? AppTheme.darkTextSecondary : const Color(0xFF5D4037),
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             '- Sahih Al-Bukhari and Muslim',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Colors.brown,
+              color: isDark ? AppColors.emerald600 : Colors.brown,
             ),
           ),
         ],

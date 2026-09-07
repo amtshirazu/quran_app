@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/domain/model/bookmark.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_service.dart';
@@ -32,6 +33,7 @@ class SurahHeaderSection extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final audio = ref.read(audioServiceProvider);
     final playerState = ref.watch(audioStreamProvider).value;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final currentPage = ref.watch(currentPageProvider);
 
@@ -45,8 +47,16 @@ class SurahHeaderSection extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 60, 24, 25),
-      decoration: const BoxDecoration(color: AppColors.emerald600),
-
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkScaffold : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [AppColors.deepGreen, AppColors.emerald600],
+              ),
+      ),
       child: Row(
         children: [
           IconButton(
@@ -57,10 +67,9 @@ class SurahHeaderSection extends ConsumerWidget {
               ref.read(currentPageSurahIdProvider.notifier).state = null;
               context.go("/surahs");
             },
-            icon: Icon(LucideIcons.arrowLeft, color: Colors.white, size: 24),
+            icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 24),
           ),
-          SizedBox(width: 16),
-
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -68,9 +77,9 @@ class SurahHeaderSection extends ConsumerWidget {
                 headerSurah?.nameEnglish ?? "",
                 style: textTheme.titleLarge?.copyWith(
                   fontSize: AppSpacing.size18,
+                  color: Colors.white,
                 ),
               ),
-
               Text(
                 headerSurah?.translation ?? "",
                 style: textTheme.titleMedium?.copyWith(
@@ -80,9 +89,7 @@ class SurahHeaderSection extends ConsumerWidget {
               ),
             ],
           ),
-
-          Spacer(),
-
+          const Spacer(),
           Row(
             children: [
               if (mode == ReadingMode.reading)
@@ -130,14 +137,10 @@ class SurahHeaderSection extends ConsumerWidget {
                     isBookmarked
                         ? LucideIcons.bookmarkCheck
                         : LucideIcons.bookmark,
-                    color: isBookmarked
-                        ? Colors
-                              .amber // yellow
-                        : AppColors.gray200,
+                    color: isBookmarked ? Colors.amber : AppColors.gray200,
                     size: 22,
                   ),
                 ),
-
               IconButton(
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class PowerOfDuaCard extends StatelessWidget {
   const PowerOfDuaCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.emerald500,
+        color: isDark ? AppTheme.darkSurface : AppColors.emerald500,
         borderRadius: BorderRadius.circular(16),
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
       ),
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,

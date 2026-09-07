@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:muslim_data_flutter/muslim_data_flutter.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/states/azkaar_provider.dart';
 
 class CategoryListCard extends ConsumerWidget {
@@ -12,13 +13,16 @@ class CategoryListCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final countAsync = ref.watch(categoryItemCountProvider(category.id));
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFE0F2F1).withAlpha(102),
+        color: isDark ? AppTheme.darkSurface : const Color(0xFFE0F2F1).withAlpha(102),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.emerald600.withAlpha(26)),
+        border: Border.all(
+          color: isDark ? AppTheme.darkBorder : AppColors.emerald600.withAlpha(26),
+        ),
       ),
       child: Material(
         color: Colors.transparent,
@@ -30,14 +34,14 @@ class CategoryListCard extends ConsumerWidget {
             width: 45,
             height: 45,
             decoration: BoxDecoration(
-              color: const Color(0xFFB2DFDB),
+              color: isDark ? AppColors.emerald600.withAlpha(38) : const Color(0xFFB2DFDB),
               borderRadius: BorderRadius.circular(12),
             ),
             alignment: Alignment.center,
             child: Text(
               '${category.id}',
-              style: const TextStyle(
-                color: Color(0xFF00796B),
+              style: TextStyle(
+                color: isDark ? AppColors.emerald600 : const Color(0xFF00796B),
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
@@ -45,13 +49,19 @@ class CategoryListCard extends ConsumerWidget {
           ),
           title: Text(
             category.name,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              color: isDark ? AppTheme.darkTextPrimary : Colors.black87,
+            ),
           ),
           subtitle: countAsync.when(
             data: (count) => Text(
               '$count azkar',
-              style:
-                  const TextStyle(color: AppColors.emerald600, fontSize: 13),
+              style: TextStyle(
+                color: isDark ? AppTheme.darkTextSecondary : AppColors.emerald600,
+                fontSize: 13,
+              ),
             ),
             loading: () => const Text('...', style: TextStyle(fontSize: 13)),
             error: (_, __) => const Text('0 azkar'),

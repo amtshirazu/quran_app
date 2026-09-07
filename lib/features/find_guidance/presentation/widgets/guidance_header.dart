@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class GuidanceHeader extends StatelessWidget implements PreferredSizeWidget {
   const GuidanceHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: AppColors.emerald600,
+      backgroundColor: isDark ? AppTheme.darkScaffold : AppColors.emerald600,
       elevation: 0,
       leading: IconButton(
         icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 22),

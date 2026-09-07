@@ -1,25 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
 import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/azkaar_and_dua/domain/model/quranic_dua.dart';
+import 'package:quran_app/features/settings/presentation/state/display_settings_provider.dart';
 
-class DuaCard extends StatelessWidget {
+class DuaCard extends ConsumerWidget {
   final QuranicDua dua;
 
   const DuaCard({super.key, required this.dua});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isWitr = dua.categoryType == 'witr';
+
+    final quranScript = ref.watch(quranScriptProvider);
+    final ayahTextSize = ref.watch(ayahTextSizeProvider);
+    final translationTextSize = ref.watch(translationTextSizeProvider);
+    final transliterationTextSize = ref.watch(transliterationTextSizeProvider);
+    final referenceTextSize = ref.watch(referenceTextSizeProvider);
+
+    final fontName = quranScript == 'IndoPak' ? "Indo Park" : "Uthmanic";
 
     final formattedSubject = isWitr
         ? 'Qunoot & Supplication'
         : (dua.subject.isNotEmpty
             ? '${dua.subject[0].toUpperCase()}${dua.subject.substring(1)}'
             : 'General');
+
+    final referenceText = isWitr
+        ? (dua.source ?? "Hadith / Sunnah")
+        : "Quran ${dua.surahNum}:${dua.ayahNum}";
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -63,7 +77,9 @@ class DuaCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.emerald600.withAlpha(38) : AppColors.emerald100,
+                        color: isDark
+                            ? AppColors.emerald600.withAlpha(38)
+                            : AppColors.emerald100,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -106,13 +122,13 @@ class DuaCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          /// Arabic text
+          /// Arabic Text
           Text(
             dua.arabic,
             textAlign: TextAlign.right,
             style: TextStyle(
-              fontFamily: "Uthmanic",
-              fontSize: 22,
+              fontFamily: fontName,
+              fontSize: ayahTextSize,
               fontWeight: FontWeight.bold,
               color: isDark ? AppTheme.darkTextPrimary : Colors.black,
               height: 1.8,
@@ -132,7 +148,7 @@ class DuaCard extends StatelessWidget {
               child: Text(
                 dua.transliteration!,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: transliterationTextSize,
                   fontStyle: FontStyle.italic,
                   color: isDark ? AppTheme.darkTextSecondary : Colors.black54,
                   height: 1.4,
@@ -146,7 +162,7 @@ class DuaCard extends StatelessWidget {
           Text(
             dua.translation,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: translationTextSize,
               color: isDark ? AppTheme.darkTextPrimary : Colors.black87,
               height: 1.4,
             ),
@@ -155,11 +171,9 @@ class DuaCard extends StatelessWidget {
 
           /// Reference / Source
           Text(
-            isWitr
-                ? (dua.source ?? "Hadith / Sunnah")
-                : "Quran ${dua.surahNum}:${dua.ayahNum}",
-            style: const TextStyle(
-              fontSize: 12,
+            referenceText,
+            style: TextStyle(
+              fontSize: referenceTextSize,
               fontWeight: FontWeight.w600,
               color: AppColors.emerald600,
             ),

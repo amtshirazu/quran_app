@@ -2,23 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class AzkaarDuaCard extends StatelessWidget {
   const AzkaarDuaCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, bottom: 25, top: 15),
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkSurface : null,
         borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.deepGreen, AppColors.emerald600],
-        ),
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.deepGreen, AppColors.emerald600],
+              ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,8 +56,8 @@ class AzkaarDuaCard extends StatelessWidget {
                 context.push('/azkaarAndDua');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: AppColors.emerald600,
+                backgroundColor: isDark ? AppColors.emerald600 : Colors.white,
+                foregroundColor: isDark ? Colors.white : AppColors.emerald600,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

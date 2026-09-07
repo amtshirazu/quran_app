@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class SelectionCard extends StatelessWidget {
   final String title;
@@ -18,22 +20,28 @@ class SelectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppTheme.darkSurface : Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(
+            color: isDark ? AppTheme.darkBorder : Colors.grey.shade100,
+          ),
+          boxShadow: isDark
+              ? null
+              : [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(5),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Column(
           children: [
@@ -42,10 +50,10 @@ class SelectionCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE0F2F1),
+                    color: isDark ? AppColors.emerald600.withAlpha(38) : const Color(0xFFE0F2F1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(icon, color: const Color(0xFF009688)),
+                  child: Icon(icon, color: AppColors.emerald600),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -55,22 +63,25 @@ class SelectionCard extends StatelessWidget {
                       Text(
                         title,
                         style: const TextStyle(
-                          color: Color(0xFF009688),
+                          color: AppColors.emerald600,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         subtitle,
-                        style: const TextStyle(
-                          color: Colors.grey,
+                        style: TextStyle(
+                          color: isDark ? AppTheme.darkTextSecondary : Colors.grey,
                           fontSize: 13,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: Colors.grey),
+                Icon(
+                  Icons.chevron_right,
+                  color: isDark ? AppTheme.darkTextSecondary : Colors.grey,
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -84,13 +95,13 @@ class SelectionCard extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF1F8F7),
+                        color: isDark ? AppTheme.darkScaffold : const Color(0xFFF1F8F7),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         tag,
                         style: const TextStyle(
-                          color: Color(0xFF009688),
+                          color: AppColors.emerald600,
                           fontSize: 12,
                         ),
                       ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_service.dart';
 import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
@@ -33,6 +34,8 @@ class GuidanceVerseCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final isBookmarked = ref.watch(
       isAyahBookmarkedProvider((
         surahId: verse.surahNum,
@@ -43,72 +46,71 @@ class GuidanceVerseCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.gray200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(8),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: isDark ? AppTheme.darkBorder : AppColors.gray200),
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withAlpha(8),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            /// Arabic Verse Text
             if (verse.arabicText != null && verse.arabicText!.isNotEmpty) ...[
               Text(
                 verse.arabicText!,
                 textAlign: TextAlign.center,
                 textDirection: TextDirection.rtl,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 24,
                   height: 1.8,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.gray900,
+                  color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
                   fontFamily: 'Uthmanic',
                 ),
               ),
               const SizedBox(height: 12),
             ],
 
-            /// English Translation
             if (verse.translation != null && verse.translation!.isNotEmpty) ...[
               Text(
                 '"${verse.translation}"',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   height: 1.5,
                   fontStyle: FontStyle.italic,
-                  color: AppColors.gray700,
+                  color: isDark ? AppTheme.darkTextSecondary : AppColors.gray700,
                 ),
               ),
               const SizedBox(height: 8),
             ],
 
-            /// Reference (Surah & Verse Number)
             Text(
               'Surah ${verse.surahNum}, Verse ${verse.ayahNum}',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.gray500,
+                color: isDark ? AppTheme.darkTextSecondary : AppColors.gray500,
                 fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 16),
 
-            /// "Why this verse?" Container
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.emerald50,
+                color: isDark ? AppTheme.darkScaffold : AppColors.emerald50,
                 borderRadius: BorderRadius.circular(12),
+                border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,16 +120,16 @@ class GuidanceVerseCard extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF065F46), // Emerald 900
+                      color: AppColors.emerald600,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     verse.whyThisVerse,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       height: 1.4,
-                      color: Color(0xFF064E3B), // Emerald 800
+                      color: isDark ? AppTheme.darkTextSecondary : const Color(0xFF064E3B),
                     ),
                   ),
                 ],
@@ -135,23 +137,24 @@ class GuidanceVerseCard extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            /// Action Buttons (Read Full Surah & Bookmark Heart)
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppColors.gray300),
+                      side: BorderSide(
+                        color: isDark ? AppTheme.darkBorder : AppColors.gray300,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     onPressed: () => _navigateToSurah(context, ref),
-                    child: const Text(
+                    child: Text(
                       'Read Full Surah',
                       style: TextStyle(
-                        color: AppColors.gray900,
+                        color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -160,15 +163,15 @@ class GuidanceVerseCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
 
-                /// Bookmark Heart Button
                 IconButton.outlined(
                   style: IconButton.styleFrom(
-                    backgroundColor:
-                        isBookmarked ? const Color(0xFFFEF2F2) : Colors.white,
+                    backgroundColor: isDark
+                        ? AppTheme.darkScaffold
+                        : (isBookmarked ? const Color(0xFFFEF2F2) : Colors.white),
                     side: BorderSide(
                       color: isBookmarked
                           ? const Color(0xFFFCA5A5)
-                          : AppColors.gray300,
+                          : (isDark ? AppTheme.darkBorder : AppColors.gray300),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -272,7 +275,7 @@ class GuidanceVerseCard extends ConsumerWidget {
                     size: 18,
                     color: isBookmarked
                         ? const Color(0xFFEF4444)
-                        : AppColors.gray700,
+                        : (isDark ? AppTheme.darkTextSecondary : AppColors.gray700),
                   ),
                 ),
               ],

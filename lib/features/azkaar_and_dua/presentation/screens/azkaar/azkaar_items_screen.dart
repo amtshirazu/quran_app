@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:muslim_data_flutter/muslim_data_flutter.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/states/azkaar_provider.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/widgets/azkaar/azkaar_card.dart';
 
@@ -12,15 +15,25 @@ class AzkarItemsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final itemsAsync = ref.watch(itemsProvider(chapter.id));
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFBFDFF),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
         child: AppBar(
-          backgroundColor: AppColors.emerald600,
+          backgroundColor: isDark ? AppTheme.darkScaffold : AppColors.emerald600,
           elevation: 0,
-          leading: const BackButton(color: Colors.white),
+          leading: IconButton(
+            icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 22),
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/');
+              }
+            },
+          ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

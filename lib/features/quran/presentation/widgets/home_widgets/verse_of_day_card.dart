@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/quran/presentation/state/daily_verse_provider.dart';
+import 'package:quran_app/features/settings/presentation/state/display_settings_provider.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_spacing.dart';
 
@@ -11,21 +13,36 @@ class DailyVerseCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final dailyVerseAsync = ref.watch(dailyVerseWithTranslationProvider);
+
+    final quranScript = ref.watch(quranScriptProvider);
+    final ayahTextSize = ref.watch(ayahTextSizeProvider);
+    final translationTextSize = ref.watch(translationTextSizeProvider);
+    final referenceTextSize = ref.watch(referenceTextSizeProvider);
+
+    final fontName = quranScript == 'IndoPak' ? "Indo Park" : "Uthmanic";
 
     return Card(
       margin: const EdgeInsets.only(bottom: 25, left: 15, right: 15),
-      elevation: 6,
+      elevation: isDark ? 0 : 6,
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
+      ),
+      color: isDark ? AppTheme.darkSurface : null,
       child: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.deepGreen, AppColors.emerald600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+        decoration: BoxDecoration(
+          color: isDark ? AppTheme.darkSurface : null,
+          gradient: isDark
+              ? null
+              : const LinearGradient(
+                  colors: [AppColors.deepGreen, AppColors.emerald600],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -53,30 +70,27 @@ class DailyVerseCard extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-
                 Text(
                   verse.arabicText,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: "Uthmanic",
-                    fontSize: AppSpacing.size24,
+                  style: TextStyle(
+                    fontFamily: fontName,
+                    fontSize: ayahTextSize,
                     color: Colors.white,
                     height: 1.6,
                   ),
                 ),
                 const SizedBox(height: 12),
-
                 Text(
                   verse.translation,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: AppSpacing.size14,
+                  style: TextStyle(
+                    fontSize: translationTextSize,
                     color: AppColors.emerald100,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Surah MetaData
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -89,8 +103,8 @@ class DailyVerseCard extends ConsumerWidget {
                   child: Text(
                     "Surah ${verse.surah?.nameEnglish ?? ''} (${verse.surah?.number ?? ''} : ${verse.ayahNumber})",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: AppSpacing.size12,
+                    style: TextStyle(
+                      fontSize: referenceTextSize,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),

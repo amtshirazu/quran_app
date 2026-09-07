@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../state/guidance_provider.dart';
 
 class GuidanceVerseHeader extends ConsumerWidget implements PreferredSizeWidget {
@@ -13,8 +14,10 @@ class GuidanceVerseHeader extends ConsumerWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: AppColors.emerald600,
+      backgroundColor: isDark ? AppTheme.darkScaffold : AppColors.emerald600,
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),

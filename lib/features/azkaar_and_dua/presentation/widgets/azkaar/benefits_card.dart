@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class BenefitsCard extends StatelessWidget {
   const BenefitsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final benefits = [
       'Brings peace and tranquility to the heart',
       'Strengthens your connection with Allah',
@@ -17,19 +20,21 @@ class BenefitsCard extends StatelessWidget {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF9C4).withOpacity(0.3), // Light yellow
+        color: isDark ? AppTheme.darkSurface : const Color(0xFFFFF9C4).withAlpha(76),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFFFF176).withOpacity(0.5)),
+        border: Border.all(
+          color: isDark ? AppTheme.darkBorder : const Color(0xFFFFF176).withAlpha(128),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Benefits of Dhikr',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF5D4037),
+              color: isDark ? AppTheme.darkTextPrimary : const Color(0xFF5D4037),
             ),
           ),
           const SizedBox(height: 12),
@@ -42,14 +47,17 @@ class BenefitsCard extends StatelessWidget {
                   const Text(
                     '• ',
                     style: TextStyle(
-                      color: Colors.orange,
+                      color: AppColors.emerald600,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Expanded(
                     child: Text(
                       benefit,
-                      style: const TextStyle(fontSize: 14, color: Colors.brown),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? AppTheme.darkTextSecondary : Colors.brown,
+                      ),
                     ),
                   ),
                 ],

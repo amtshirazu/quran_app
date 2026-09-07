@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_spacing.dart';
 
@@ -10,25 +11,31 @@ class LifeSituationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 25, left: 15, right: 15),
-      elevation: 6,
+      elevation: isDark ? 0 : 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
+        side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
       ),
       clipBehavior: Clip.antiAlias,
+      color: isDark ? AppTheme.darkSurface : null,
       child: Container(
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.deepGreen,
-              AppColors.emerald600,
-            ],
-          ),
+        decoration: BoxDecoration(
+          color: isDark ? AppTheme.darkSurface : null,
+          gradient: isDark
+              ? null
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppColors.deepGreen,
+                    AppColors.emerald600,
+                  ],
+                ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,8 +70,8 @@ class LifeSituationCard extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppColors.emerald600,
+                  backgroundColor: isDark ? AppColors.emerald600 : Colors.white,
+                  foregroundColor: isDark ? Colors.white : AppColors.emerald600,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   shape: RoundedRectangleBorder(

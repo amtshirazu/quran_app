@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart';
 
 class ReflectionHeader extends ConsumerWidget {
@@ -10,7 +11,7 @@ class ReflectionHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch the stats or list length for the "X reflections" subtitle
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final reflectionListAsync = ref.watch(reflectionsUIProvider);
     final count = reflectionListAsync.maybeWhen(
       data: (list) => list.length,
@@ -19,16 +20,18 @@ class ReflectionHeader extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 60, 16, 24),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppColors.deepGreen, AppColors.emerald600],
-        ),
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkScaffold : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [AppColors.deepGreen, AppColors.emerald600],
+              ),
       ),
       child: Column(
         children: [
-          // Top Row: Back, Title/Count, and New Button
           Row(
             children: [
               IconButton(
@@ -64,7 +67,6 @@ class ReflectionHeader extends ConsumerWidget {
                   ],
                 ),
               ),
-              // "+ New" Button
               ElevatedButton.icon(
                 onPressed: () => context.go('/surahs'),
                 icon: const Icon(Icons.add, size: 18),
@@ -80,36 +82,38 @@ class ReflectionHeader extends ConsumerWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 20),
-
-          // Search Bar
           Container(
             height: 45,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.white.withAlpha(38),
+              color: isDark ? AppTheme.darkSurface : Colors.white.withAlpha(38),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white30),
+              border: Border.all(
+                color: isDark ? AppTheme.darkBorder : Colors.white30,
+              ),
             ),
             child: TextField(
+              textAlignVertical: TextAlignVertical.center,
               onChanged: (value) {
                 ref.read(reflectionSearchQueryProvider.notifier).state = value;
               },
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: isDark ? Colors.white : Colors.white),
               cursorColor: Colors.white,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
+                isDense: true,
                 hintText: "Search reflections...",
                 hintStyle: TextStyle(
-                  color: Colors.white70,
+                  color: isDark ? AppTheme.darkTextSecondary : Colors.white70,
                   fontSize: 14,
                 ),
                 prefixIcon: Icon(
                   LucideIcons.search,
-                  color: Colors.white70,
+                  color: isDark ? AppTheme.darkTextSecondary : Colors.white70,
                   size: 18,
                 ),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 10),
+                contentPadding: EdgeInsets.zero,
               ),
             ),
           ),

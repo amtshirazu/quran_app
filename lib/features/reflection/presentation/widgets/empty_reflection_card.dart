@@ -1,55 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class EmptyReflectionsCard extends StatelessWidget {
   const EmptyReflectionsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const colorMidGray = Color(0xFF4A4A4A);
-    const colorLightGray = Color(0xFFD1D5DB); // Neutral gray for the icon
-    const colorAmber = Color(0xFFD97706); // Primary button color
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(
+          color: isDark ? AppTheme.darkBorder : Colors.grey.shade100,
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Large Placeholder Icon
           Icon(
             LucideIcons.notebookPen,
             size: 64,
-            color: colorLightGray.withOpacity(0.5),
+            color: isDark ? AppTheme.darkTextSecondary : Colors.grey.shade300,
           ),
           const SizedBox(height: 16),
-
-          // Primary Label
-          const Text(
+          Text(
             "No reflections yet",
             style: TextStyle(
               fontSize: 16,
-              color: colorMidGray,
+              color: isDark ? AppTheme.darkTextSecondary : const Color(0xFF4A4A4A),
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 24),
-
-          // Action Button
           ElevatedButton(
             onPressed: () {
-              // Navigate to your Quran reading screen
               context.go('/surahs');
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: colorAmber,
+              backgroundColor: AppColors.emerald600,
               foregroundColor: Colors.white,
               elevation: 0,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),

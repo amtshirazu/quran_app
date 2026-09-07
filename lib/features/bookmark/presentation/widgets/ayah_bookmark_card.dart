@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/domain/model/verse_model.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
@@ -15,8 +17,8 @@ class VerseBookmarkCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final b = data.bookmark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Precise colors from image_54be28.png
     const colorMidGray = Color(0xFF4A4A4A);
     const colorDeepGray = Color(0xFF111827);
     const colorAmberBG = Color(0xFFFFEFA7);
@@ -26,20 +28,19 @@ class VerseBookmarkCard extends ConsumerWidget {
     const colorLightGrayBorder = Color(0xFFD4D4D8);
 
     return Card(
-      elevation: 0, // Set to 0 to match the flat look of the image
-      color: Colors.white, // White card background as requested
+      elevation: isDark ? 0 : 0,
+      color: isDark ? AppTheme.darkSurface : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: colorLightGrayBorder.withOpacity(0.5),
-        ), // Subtle border
+          color: isDark ? AppTheme.darkBorder : colorLightGrayBorder.withAlpha(128),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // HEADER
             Row(
               children: [
                 Container(
@@ -48,29 +49,26 @@ class VerseBookmarkCard extends ConsumerWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: colorAmberBG, // Updated to image_54be28.png color
+                    color: isDark ? AppColors.emerald600.withAlpha(38) : colorAmberBG,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     "${data.surah.nameEnglish} ${b.ayahNumber}",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
-                      color:
-                          colorDeepGoldText, // Updated to image_54be28.png color
+                      color: isDark ? AppColors.emerald600 : colorDeepGoldText,
                     ),
                   ),
                 ),
                 const Spacer(),
-                // Adjusted Trash Icon styling to match the image
                 IconButton(
                   visualDensity: VisualDensity.compact,
-                  icon: const Icon(
+                  icon: Icon(
                     LucideIcons.trash2,
                     size: 18,
-                    color: colorMidGray,
+                    color: isDark ? AppTheme.darkTextSecondary : colorMidGray,
                   ),
-                  color: colorLightGrayBorder,
                   onPressed: () {
                     ref.read(bookmarkServiceProvider).deleteBookmark(b.id!);
                     ref.invalidate(verseBookmarkUIProvider);
@@ -78,60 +76,48 @@ class VerseBookmarkCard extends ConsumerWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
-            // ARABIC
             Align(
               alignment: Alignment.centerRight,
               child: Text(
                 data.arabic,
                 textAlign: TextAlign.right,
                 textDirection: TextDirection.rtl,
-                style: const TextStyle(
-                  color: Colors.black87,
+                style: TextStyle(
+                  color: isDark ? AppTheme.darkTextPrimary : Colors.black87,
                   fontSize: 22,
-                  fontFamily: 'Uthmani',
+                  fontFamily: 'Uthmanic',
                   height: 1.4,
                 ),
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // TRANSLATION
             Text(
               data.translation,
-              style: const TextStyle(
-                color: colorMidGray, // Updated to image_54be28.png color
+              style: TextStyle(
+                color: isDark ? AppTheme.darkTextSecondary : colorMidGray,
                 fontSize: 14,
                 height: 1.5,
               ),
             ),
-
             const SizedBox(height: 12),
-
-            // NOTE
             if (b.note != null && b.note!.isNotEmpty)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: colorNoteBG, // Updated to image_54be28.png color
+                  color: isDark ? AppTheme.darkScaffold : colorNoteBG,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   "📝 ${b.note!}",
-                  style: const TextStyle(
-                    color: colorBrownText, // Updated to image_54be28.png color
+                  style: TextStyle(
+                    color: isDark ? AppTheme.darkTextSecondary : colorBrownText,
                     fontSize: 14,
                   ),
                 ),
               ),
-
             const SizedBox(height: 12),
-
-            // BUTTON
             SizedBox(
               height: 36,
               child: OutlinedButton(
@@ -142,15 +128,17 @@ class VerseBookmarkCard extends ConsumerWidget {
                   context.go('/readAyah');
                 },
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: colorLightGrayBorder),
+                  side: BorderSide(
+                    color: isDark ? AppTheme.darkBorder : colorLightGrayBorder,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   "Read Full Surah",
                   style: TextStyle(
-                    color: colorDeepGray, // Updated to image_54be28.png color
+                    color: isDark ? AppTheme.darkTextPrimary : colorDeepGray,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),

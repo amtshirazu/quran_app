@@ -3,30 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/quran/presentation/state/translation_provider.dart';
-import 'package:quran_app/features/settings/presentation/state/theme_provider.dart';
+import 'package:quran_app/features/settings/presentation/state/display_settings_provider.dart';
 import '../widgets/settings_card.dart';
 import '../widgets/settings_header.dart';
 import '../widgets/settings_row.dart';
 import '../widgets/settings_section_title.dart';
-import '../widgets/settings_slider_row.dart';
+import '../widgets/settings_stepper_row.dart';
 
-class SettingsScreen extends ConsumerStatefulWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  bool _ayahBeforeTranslation = true;
-  bool _dyslexiaFont = false;
-  double _ayahTextSize = 15;
-  double _translationTextSize = 15;
-  String _selectedScript = 'Uthmanic';
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final isDarkMode = themeMode == ThemeMode.dark;
 
@@ -34,6 +24,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final String translationSubtitle = selectedTranslations.length > 1
         ? 'Multiple (${selectedTranslations.length})'
         : 'Sahih International';
+
+    final quranScript = ref.watch(quranScriptProvider);
+    final ayahTextSize = ref.watch(ayahTextSizeProvider);
+    final translationTextSize = ref.watch(translationTextSizeProvider);
+    final transliterationTextSize = ref.watch(transliterationTextSizeProvider);
+    final referenceTextSize = ref.watch(referenceTextSizeProvider);
+    final showAyahBefore = ref.watch(showAyahBeforeTranslationProvider);
+
+    final fontName = quranScript == 'IndoPak' ? "Indo Park" : "Uthmanic";
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -107,9 +106,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       const Icon(Icons.chevron_right, color: AppColors.gray400, size: 20),
                     ],
                   ),
-                  onTap: () {
-                    // Open Reciter Selector
-                  },
+                  onTap: () {},
                 ),
               ],
             ),
@@ -122,38 +119,80 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   title: 'Ayah before translation',
                   subtitle: 'Show Arabic above the translation',
                   trailing: Switch(
-                    value: _ayahBeforeTranslation,
+                    value: showAyahBefore,
                     activeTrackColor: AppColors.emerald600,
                     onChanged: (val) {
-                      setState(() => _ayahBeforeTranslation = val);
+                      ref.read(showAyahBeforeTranslationProvider.notifier).toggle(val);
                     },
                   ),
                 ),
-                SettingsRow(
-                  title: 'Dyslexia friendly font',
-                  subtitle: 'Easier-to-read translation font',
-                  trailing: Switch(
-                    value: _dyslexiaFont,
-                    activeTrackColor: AppColors.emerald600,
-                    onChanged: (val) {
-                      setState(() => _dyslexiaFont = val);
-                    },
-                  ),
-                ),
-                SettingsSliderRow(
+                SettingsStepperRow(
                   title: 'Ayah text size',
-                  value: _ayahTextSize,
-                  onChanged: (val) {
-                    setState(() => _ayahTextSize = val);
-                  },
+                  value: ayahTextSize,
+                  onDecrement: () =>
+                      ref.read(ayahTextSizeProvider.notifier).decrement(),
+                  onIncrement: () =>
+                      ref.read(ayahTextSizeProvider.notifier).increment(),
+                  previewWidget: Text(
+                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: fontName,
+                      fontSize: ayahTextSize,
+                      color: isDarkMode ? AppTheme.darkTextPrimary : AppColors.gray900,
+                    ),
+                  ),
                 ),
-                SettingsSliderRow(
+                SettingsStepperRow(
+                  title: 'Transliteration text size',
+                  value: transliterationTextSize,
+                  onDecrement: () =>
+                      ref.read(transliterationTextSizeProvider.notifier).decrement(),
+                  onIncrement: () =>
+                      ref.read(transliterationTextSizeProvider.notifier).increment(),
+                  previewWidget: Text(
+                    "Rabbanaa afrigh 'alaynaa sabran wa thabbit aqdaamanaa",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: transliterationTextSize,
+                      fontStyle: FontStyle.italic,
+                      color: isDarkMode ? AppTheme.darkTextSecondary : AppColors.gray700,
+                    ),
+                  ),
+                ),
+                SettingsStepperRow(
                   title: 'Translation text size',
-                  value: _translationTextSize,
+                  value: translationTextSize,
+                  onDecrement: () =>
+                      ref.read(translationTextSizeProvider.notifier).decrement(),
+                  onIncrement: () =>
+                      ref.read(translationTextSizeProvider.notifier).increment(),
+                  previewWidget: Text(
+                    "Our Lord! Pour forth on us patience and make us victorious over the disbelieving people.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: translationTextSize,
+                      color: isDarkMode ? AppTheme.darkTextPrimary : AppColors.gray900,
+                    ),
+                  ),
+                ),
+                SettingsStepperRow(
+                  title: 'Reference text size',
+                  value: referenceTextSize,
                   showDivider: false,
-                  onChanged: (val) {
-                    setState(() => _translationTextSize = val);
-                  },
+                  onDecrement: () =>
+                      ref.read(referenceTextSizeProvider.notifier).decrement(),
+                  onIncrement: () =>
+                      ref.read(referenceTextSizeProvider.notifier).increment(),
+                  previewWidget: Text(
+                    "Quran 2:250 • Al-Bukhari, Muslim",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: referenceTextSize,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.emerald600,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -164,21 +203,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               children: [
                 SettingsRow(
                   title: 'IndoPak',
-                  trailing: _selectedScript == 'IndoPak'
+                  trailing: quranScript == 'IndoPak'
                       ? const Icon(Icons.check_circle, color: AppColors.emerald600, size: 20)
                       : const SizedBox.shrink(),
                   onTap: () {
-                    setState(() => _selectedScript = 'IndoPak');
+                    ref.read(quranScriptProvider.notifier).setScript('IndoPak');
                   },
                 ),
                 SettingsRow(
                   title: 'Uthmanic',
                   showDivider: false,
-                  trailing: _selectedScript == 'Uthmanic'
+                  trailing: quranScript == 'Uthmanic'
                       ? const Icon(Icons.check_circle, color: AppColors.emerald600, size: 20)
                       : const SizedBox.shrink(),
                   onTap: () {
-                    setState(() => _selectedScript = 'Uthmanic');
+                    ref.read(quranScriptProvider.notifier).setScript('Uthmanic');
                   },
                 ),
               ],
@@ -254,57 +293,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             SettingsCard(
               children: [
                 SettingsRow(
-                  iconWidget: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF25D366),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      LucideIcons.messageCircle,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ),
+                  icon: LucideIcons.messageSquare,
                   title: 'Feedback / Chat',
                   subtitle: "Let's share your thoughts with us",
                   trailing: const Icon(Icons.chevron_right, color: AppColors.gray400, size: 20),
                   onTap: () {},
                 ),
                 SettingsRow(
-                  iconWidget: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF59E0B),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      LucideIcons.star,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ),
+                  icon: LucideIcons.star,
                   title: 'Rate Us',
                   subtitle: 'Your feedback will help millions of users worldwide',
                   trailing: const Icon(Icons.chevron_right, color: AppColors.gray400, size: 20),
                   onTap: () {},
                 ),
                 SettingsRow(
-                  iconWidget: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF3B82F6),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      LucideIcons.share2,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ),
+                  icon: LucideIcons.share2,
                   title: 'Share App',
                   subtitle: 'Invite & Share 5 Friends to Remove Ads',
                   showDivider: false,

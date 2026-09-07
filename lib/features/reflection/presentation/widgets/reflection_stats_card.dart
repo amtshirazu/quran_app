@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart';
 
 class ReflectionStatsCard extends ConsumerWidget {
@@ -8,13 +10,22 @@ class ReflectionStatsCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stats = ref.watch(reflectionStatsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: BoxDecoration(
-        color: const Color(0xFFA855F7), // Vibrant Purple
+        color: isDark ? AppTheme.darkSurface : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.deepGreen, AppColors.emerald600],
+              ),
         borderRadius: BorderRadius.circular(20),
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +65,7 @@ class ReflectionStatsCard extends ConsumerWidget {
         ),
         Text(
           label,
-          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
+          style: const TextStyle(color: AppColors.emerald100, fontSize: 12),
         ),
       ],
     );

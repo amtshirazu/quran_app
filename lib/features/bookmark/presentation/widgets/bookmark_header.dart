@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/bookmark/presentation/widgets/bookmark_tabs.dart';
 import 'package:quran_app/features/bookmark/presentation/widgets/delete_bookmark.dart';
@@ -12,16 +14,32 @@ class BookmarkHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final totalCount = ref.watch(totalCountProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      color: const Color(0xFFD97706),
       padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkScaffold : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [AppColors.deepGreen, AppColors.emerald600],
+              ),
+      ),
       child: Column(
         children: [
           Row(
             children: [
               IconButton(
-                onPressed: () => context.go('/'),
+                onPressed: () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/');
+                  }
+                },
                 icon: const Icon(LucideIcons.arrowLeft, color: Colors.white),
               ),
               const SizedBox(width: 8),
@@ -39,14 +57,13 @@ class BookmarkHeader extends ConsumerWidget {
                     ),
                     Text(
                       "$totalCount saved",
-                      style: const TextStyle(color: Colors.white70),
+                      style: const TextStyle(color: AppColors.emerald100),
                     ),
                   ],
                 ),
               ),
               InkWell(
-                onTap: () =>
-                    handleDeleteAction(context, ref), // Logic called here
+                onTap: () => handleDeleteAction(context, ref),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
@@ -56,7 +73,7 @@ class BookmarkHeader extends ConsumerWidget {
                       "Delete All",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14, // Adjusted for better fit
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

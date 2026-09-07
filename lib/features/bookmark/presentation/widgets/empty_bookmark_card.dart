@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_states.dart';
 
@@ -11,12 +13,11 @@ class EmptyBookmarksCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final activeTab = ref.watch(bookmarkTabProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Define properties based on the active tab
     String title;
     String subtitle;
     IconData icon;
-    Color themeColor;
     String buttonText;
 
     switch (activeTab) {
@@ -25,7 +26,6 @@ class EmptyBookmarksCard extends ConsumerWidget {
         subtitle =
             "Bookmark meaningful verses as you read to save them for later reflection and study.";
         icon = LucideIcons.bookmark;
-        themeColor = const Color(0xFFD97706); // Orange
         buttonText = "Browse Surahs";
         break;
       case BookmarkTab.pages:
@@ -33,17 +33,13 @@ class EmptyBookmarksCard extends ConsumerWidget {
         subtitle =
             "Bookmark pages to mark where you stopped reading and continue your journey through the Quran.";
         icon = LucideIcons.bookOpen;
-        themeColor = const Color(
-          0xFFD97706,
-        ); // Emerald/Green (as per your image)
         buttonText = "Start Reading";
         break;
-      default: // BookmarkTab.all
+      default:
         title = "No Bookmarks Yet";
         subtitle =
             "Start bookmarking your favorite verses and pages to access them quickly. Your bookmarks will appear here.";
         icon = LucideIcons.bookmark;
-        themeColor = const Color(0xFFD97706); // Orange
         buttonText = "Explore Quran";
     }
 
@@ -52,47 +48,42 @@ class EmptyBookmarksCard extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Circular Icon Container
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: themeColor.withOpacity(0.15),
+              color: isDark
+                  ? AppColors.emerald600.withAlpha(38)
+                  : AppColors.emerald100,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 40, color: themeColor),
+            child: Icon(icon, size: 40, color: AppColors.emerald600),
           ),
           const SizedBox(height: 24),
-
-          // Title
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF0F172A), // Dark Blue/Gray
+              color: isDark ? AppTheme.darkTextPrimary : const Color(0xFF0F172A),
             ),
           ),
           const SizedBox(height: 12),
-
-          // Subtitle
           Text(
             subtitle,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[600],
+              color: isDark ? AppTheme.darkTextSecondary : Colors.grey[600],
               height: 1.5,
             ),
           ),
           const SizedBox(height: 32),
-
-          // Action Button
           SizedBox(
             width: 180,
             child: ElevatedButton(
               onPressed: () => context.go('/surahs'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: themeColor,
+                backgroundColor: AppColors.emerald600,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(

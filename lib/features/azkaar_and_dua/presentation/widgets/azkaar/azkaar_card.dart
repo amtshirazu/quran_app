@@ -1,59 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:muslim_data_flutter/muslim_data_flutter.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
+import 'package:quran_app/features/settings/presentation/state/display_settings_provider.dart';
 
-class AzkarItemCard extends StatelessWidget {
+class AzkarItemCard extends ConsumerWidget {
   final AzkarItem item;
   const AzkarItemCard({super.key, required this.item});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final quranScript = ref.watch(quranScriptProvider);
+    final ayahTextSize = ref.watch(ayahTextSizeProvider);
+    final translationTextSize = ref.watch(translationTextSizeProvider);
+    final referenceTextSize = ref.watch(referenceTextSizeProvider);
+
+    final fontName = quranScript == 'IndoPak' ? "Indo Park" : "Uthmanic";
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white, // Clean white card
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withAlpha(10),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Arabic Text
             Text(
               item.item,
               textAlign: TextAlign.right,
               textDirection: TextDirection.rtl,
-              style: const TextStyle(
-                fontSize: 26,
+              style: TextStyle(
+                fontSize: ayahTextSize,
                 fontWeight: FontWeight.bold,
                 height: 1.8,
-                color: Color(0xFF2D3436),
+                color: isDark ? AppTheme.darkTextPrimary : const Color(0xFF2D3436),
+                fontFamily: fontName,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Divider(color: Color(0xFFE0F2F1), thickness: 1),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Divider(
+                color: isDark ? AppTheme.darkBorder : const Color(0xFFE0F2F1),
+                thickness: 1,
+              ),
             ),
-            // Translation
             Text(
               item.translation,
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: translationTextSize,
                 height: 1.5,
-                color: Color(0xFF636E72),
+                color: isDark ? AppTheme.darkTextSecondary : const Color(0xFF636E72),
                 fontStyle: FontStyle.italic,
               ),
             ),
             const SizedBox(height: 16),
-            // Reference Tag
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
@@ -62,14 +78,14 @@ class AzkarItemCard extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF1F8F7),
+                  color: isDark ? AppTheme.darkScaffold : const Color(0xFFF1F8F7),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   item.reference,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFF009688),
+                  style: TextStyle(
+                    fontSize: referenceTextSize,
+                    color: AppColors.emerald600,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class RemembranceCard extends StatelessWidget {
   const RemembranceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF009688),
+        color: isDark ? AppTheme.darkSurface : AppColors.emerald600,
         borderRadius: BorderRadius.circular(16),
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
       ),
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +34,7 @@ class RemembranceCard extends StatelessWidget {
           SizedBox(height: 4),
           Text(
             '"Verily, in the remembrance of Allah do hearts find rest." (Quran 13:28)',
-            style: TextStyle(color: Colors.white, fontSize: 14),
+            style: TextStyle(color: Colors.white70, fontSize: 14),
           ),
         ],
       ),

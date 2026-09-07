@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_provider.dart';
 import 'package:quran_app/features/bookmark/presentation/state/bookmark_states.dart';
 
@@ -9,14 +11,15 @@ class BookmarkTabs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch the current active tab to trigger rebuilds when it changes
     final activeTab = ref.watch(bookmarkTabProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.1),
+        color: isDark ? AppTheme.darkSurface : Colors.black.withAlpha(26),
         borderRadius: BorderRadius.circular(12),
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
       ),
       child: Row(
         children: [
@@ -51,6 +54,7 @@ class _TabButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isActive = activeTab == tab;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Expanded(
       child: GestureDetector(
@@ -58,14 +62,16 @@ class _TabButton extends ConsumerWidget {
           ref.read(bookmarkTabProvider.notifier).state = tab;
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 150),
           margin: const EdgeInsets.all(2),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isActive ? Colors.white : Colors.transparent,
+            color: isActive
+                ? AppColors.emerald600
+                : (isDark ? AppTheme.darkScaffold : Colors.transparent),
             borderRadius: BorderRadius.circular(8),
             boxShadow: isActive
-                ? [BoxShadow(color: Colors.black12, blurRadius: 4)]
+                ? [BoxShadow(color: AppColors.emerald600.withAlpha(51), blurRadius: 4)]
                 : [],
           ),
           child: Center(
@@ -76,17 +82,17 @@ class _TabButton extends ConsumerWidget {
                   tab == BookmarkTab.verses
                       ? LucideIcons.bookmark
                       : tab == BookmarkTab.pages
-                      ? LucideIcons.bookOpen
-                      : LucideIcons.layoutGrid,
+                          ? LucideIcons.bookOpen
+                          : LucideIcons.layoutGrid,
                   size: 16,
-                  color: isActive ? const Color(0xFFD97706) : Colors.white,
+                  color: isSelectedColor(isActive, isDark),
                 ),
                 const SizedBox(width: 6),
                 Text(
                   text,
                   style: TextStyle(
                     fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                    color: isActive ? const Color(0xFFD97706) : Colors.white,
+                    color: isSelectedColor(isActive, isDark),
                   ),
                 ),
               ],
@@ -95,5 +101,10 @@ class _TabButton extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Color isSelectedColor(bool isActive, bool isDark) {
+    if (isActive) return Colors.white;
+    return isDark ? AppTheme.darkTextSecondary : Colors.white;
   }
 }

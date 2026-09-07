@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../states/dua_provider.dart';
 
 class DuaCategoryToggle extends ConsumerWidget {
@@ -10,12 +11,14 @@ class DuaCategoryToggle extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCategory = ref.watch(selectedDuaCategoryProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F3EE),
+        color: isDark ? AppTheme.darkSurface : const Color(0xFFE8F3EE),
         borderRadius: BorderRadius.circular(14),
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
       ),
       child: Row(
         children: [
@@ -56,13 +59,17 @@ class DuaCategoryToggle extends ConsumerWidget {
     required bool isSelected,
     required VoidCallback onTap,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.emerald600 : Colors.transparent,
+          color: isSelected
+              ? AppColors.emerald600
+              : (isDark ? AppTheme.darkScaffold : Colors.transparent),
           borderRadius: BorderRadius.circular(10),
           boxShadow: isSelected
               ? [
@@ -80,7 +87,9 @@ class DuaCategoryToggle extends ConsumerWidget {
             Icon(
               icon,
               size: 16,
-              color: isSelected ? Colors.white : AppColors.gray700,
+              color: isSelected
+                  ? Colors.white
+                  : (isDark ? AppTheme.darkTextSecondary : AppColors.gray700),
             ),
             const SizedBox(width: 6),
             Text(
@@ -88,7 +97,9 @@ class DuaCategoryToggle extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? Colors.white : AppColors.gray700,
+                color: isSelected
+                    ? Colors.white
+                    : (isDark ? AppTheme.darkTextSecondary : AppColors.gray700),
               ),
             ),
           ],
