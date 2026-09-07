@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
 
 class AzkaarDuaAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AzkaarDuaAppBar({super.key});
@@ -6,9 +9,18 @@ class AzkaarDuaAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF009688), // Teal color from your image
+      backgroundColor: AppColors.emerald600,
       elevation: 0,
-      leading: const BackButton(color: Colors.white),
+      leading: IconButton(
+        icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 22),
+        onPressed: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/');
+          }
+        },
+      ),
       title: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

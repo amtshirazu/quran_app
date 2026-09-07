@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran_app/features/prayer_times/presentation/states/prayer_time_provider.dart';
+import 'package:quran_app/features/settings/presentation/state/theme_provider.dart';
 import '../core/router/app_router.dart';
 import '../core/theme/app_theme.dart';
 import '../features/audio/presentation/state/audio_providers.dart';
@@ -44,9 +45,13 @@ class _QuranAppState extends ConsumerState<QuranApp>
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = ref.watch(themeModeProvider);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
       routerConfig: AppRouter.goRouter,
     );
   }

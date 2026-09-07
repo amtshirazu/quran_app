@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../state/search_provider.dart';
 import 'search_chip.dart';
 
@@ -15,10 +16,10 @@ class RecentSearchesSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recentSearchesAsync = ref.watch(recentSearchesProvider);
     final isExpanded = ref.watch(recentSearchesExpandedProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return recentSearchesAsync.when(
       data: (searches) {
-        // If the table is empty, do NOT show dummy text. Hide section completely!
         if (searches.isEmpty) {
           return const SizedBox.shrink();
         }
@@ -32,16 +33,15 @@ class RecentSearchesSection extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Section Header Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'RECENT SEARCHES',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2421), // Dark charcoal
+                    color: isDark ? AppTheme.darkCategoryTitle : const Color(0xFF1F2421),
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -54,7 +54,7 @@ class RecentSearchesSection extends ConsumerWidget {
                     child: Text(
                       isExpanded ? 'Show Less' : 'View All',
                       style: const TextStyle(
-                        color: Color(0xFF1E824C), // Accent green
+                        color: Color(0xFF1E824C),
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -64,7 +64,6 @@ class RecentSearchesSection extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
 
-            /// Wrap Chips Layout
             Wrap(
               spacing: 8,
               runSpacing: 8,

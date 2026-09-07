@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quran_app/features/quran/presentation/widgets/read_quran_screen_widgets/quick_access.dart';
 import 'package:quran_app/features/quran/presentation/widgets/read_quran_screen_widgets/surah_list.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../widgets/bottom_navbar.dart';
 import '../widgets/read_quran_screen_widgets/header_section.dart';
 
@@ -19,29 +18,21 @@ class _ReadQuranScreenState extends State<ReadQuranScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.emerald50, Colors.white],
-          ),
-        ),
-
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Column(
           children: [
-            ReadHeaderSection(),
-            SizedBox(height: 20),
+            const ReadQuranHeaderSection(),
+            const SizedBox(height: 20),
             Expanded(
               child: CustomScrollView(
-                cacheExtent: 1000,
-                slivers: [_quickAccess(), SurahList()],
+                slivers: [_quickAccess(), const SurahList()],
               ),
             ),
           ],
         ),
       ),
-
       bottomNavigationBar: BottomNavbar(
         currentIndex: selectedIndex,
         onTap: (index) {
@@ -73,5 +64,5 @@ class _ReadQuranScreenState extends State<ReadQuranScreen> {
 }
 
 SliverList _quickAccess() {
-  return SliverList(delegate: SliverChildListDelegate([QuickAccess()]));
+  return SliverList(delegate: SliverChildListDelegate([const QuickAccess()]));
 }

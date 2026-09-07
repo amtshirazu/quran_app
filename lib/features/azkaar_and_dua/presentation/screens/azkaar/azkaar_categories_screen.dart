@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/states/azkaar_provider.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/widgets/azkaar/categories_list.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/widgets/azkaar/prophetic_tip_card.dart';
@@ -16,7 +17,7 @@ class AzkarCategoriesScreen extends ConsumerWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
         child: AppBar(
-          backgroundColor: const Color(0xFF009688),
+          backgroundColor: AppColors.emerald600,
           elevation: 0,
           leading: const BackButton(color: Colors.white),
           title: const Column(
@@ -48,7 +49,7 @@ class AzkarCategoriesScreen extends ConsumerWidget {
             return CategoryListCard(category: categories[index]);
           },
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: CircularProgressIndicator(color: AppColors.emerald600)),
         error: (err, _) => Center(child: Text('Error: $err')),
       ),
     );

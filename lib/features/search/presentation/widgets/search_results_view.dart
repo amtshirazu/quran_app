@@ -427,43 +427,47 @@ class SearchResultsView extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.gray200),
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
-        leading: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: AppColors.emerald100,
-            borderRadius: BorderRadius.circular(12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(12),
+          leading: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.emerald100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              LucideIcons.sun,
+              color: AppColors.emerald600,
+              size: 20,
+            ),
           ),
-          child: const Icon(
-            LucideIcons.sun,
-            color: AppColors.emerald600,
-            size: 20,
+          title: HighlightedText(
+            text: item.chapter.name,
+            query: query,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: AppColors.gray900,
+            ),
           ),
-        ),
-        title: HighlightedText(
-          text: item.chapter.name,
-          query: query,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-            color: AppColors.gray900,
+          subtitle: Text(
+            item.category.name,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.gray500,
+            ),
           ),
-        ),
-        subtitle: Text(
-          item.category.name,
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.gray500,
+          trailing: const Icon(
+            Icons.chevron_right,
+            color: AppColors.gray400,
           ),
+          onTap: () {
+            context.push('/azkaarChapters', extra: item.category);
+          },
         ),
-        trailing: const Icon(
-          Icons.chevron_right,
-          color: AppColors.gray400,
-        ),
-        onTap: () {
-          context.push('/azkaarChapters', extra: item.category);
-        },
       ),
     );
   }

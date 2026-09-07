@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
 import '../state/search_provider.dart';
-import '../widgets/browse_by_topic_section.dart';
 import '../widgets/popular_searches_section.dart';
 import '../widgets/recent_searches_section.dart';
 import '../widgets/search_header.dart';
@@ -25,7 +23,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     super.initState();
     _searchController = TextEditingController();
 
-    // Reset search query state when entering SearchScreen
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(activeSearchQueryProvider.notifier).state = '';
       ref.read(searchTabFilterProvider.notifier).state = SearchTab.all;
@@ -47,11 +44,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     });
     ref.read(activeSearchQueryProvider.notifier).state = trimmed;
 
-    // Save search query into SQLite database
     final service = ref.read(searchServiceProvider);
     await service.addRecentSearch(trimmed);
 
-    // Refresh recent searches list
     ref.invalidate(recentSearchesProvider);
   }
 
@@ -70,7 +65,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final isSearching = activeQuery.length >= 2;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA), // Light gray/white body
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: SearchHeader(
         controller: _searchController,
         onSearchSubmitted: _executeSearch,
@@ -89,21 +84,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 1. Recent Searches Section (Hides if empty)
           RecentSearchesSection(
             onChipSelected: _executeSearch,
           ),
-
-          /// 2. Popular Searches Section
           PopularSearchesSection(
             onChipSelected: _executeSearch,
-          ),
-
-          /// 3. Browse by Topic Section
-          BrowseByTopicSection(
-            onTopicSelected: (topic) {
-              context.push('/topicDetail', extra: topic.label);
-            },
           ),
           const SizedBox(height: 24),
         ],
@@ -118,10 +103,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       data: (results) {
         return Column(
           children: [
-            /// 5 Distinct Search Filter Tabs
             SearchTabsBar(results: results),
-
-            /// Tabbed Results Content List
             Expanded(
               child: SearchResultsView(results: results),
             ),

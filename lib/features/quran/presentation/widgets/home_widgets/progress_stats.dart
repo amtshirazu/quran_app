@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
 
 class ProgressSection extends ConsumerWidget {
@@ -9,6 +10,7 @@ class ProgressSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final progressAsync = ref.watch(profileProgressProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, bottom: 50),
@@ -21,7 +23,7 @@ class ProgressSection extends ConsumerWidget {
               "Your Progress",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF111827),
+                color: isDark ? AppTheme.darkTextPrimary : const Color(0xFF111827),
               ),
             ),
           ),
@@ -80,12 +82,16 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(
+          color: isDark ? AppTheme.darkBorder : Colors.grey.shade200,
+        ),
       ),
       child: Column(
         children: [
@@ -93,15 +99,18 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF111827),
+              color: isDark ? AppTheme.darkTextPrimary : const Color(0xFF111827),
             ),
           ),
           Text(
             label,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+            style: TextStyle(
+              color: isDark ? AppTheme.darkTextSecondary : Colors.grey.shade600,
+              fontSize: 11,
+            ),
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
 import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
 import '../../../../../core/constants/app_spacing.dart';
@@ -20,7 +21,6 @@ class ContinueReadingCard extends ConsumerWidget {
     return continueReadingAsync.when(
       data: (data) {
         if (data == null) {
-          print("No last read data available.");
           return const EmptyCard();
         }
         return InkWell(
@@ -38,6 +38,7 @@ class ContinueReadingCard extends ConsumerWidget {
             context.go('/readAyah');
           },
           child: _buildCard(
+            context,
             subtitle: "${data.surah.nameEnglish} • ${data.displayText}",
             progress: data.progress,
           ),
@@ -47,71 +48,76 @@ class ContinueReadingCard extends ConsumerWidget {
       error: (_, __) => const EmptyCard(),
     );
   }
-}
 
-Widget _buildCard({required String subtitle, required double progress}) {
-  return Card(
-    margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-    color: Colors.white,
-    elevation: 6,
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                LucideIcons.bookOpen,
-                color: AppColors.emerald600,
-                size: 22,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                "Continue Reading",
-                style: TextStyle(
-                  color: AppColors.gray900,
-                  fontSize: AppSpacing.size16,
-                ),
-              ),
-              const Spacer(),
-              const Icon(
-                LucideIcons.chevronRight,
-                color: AppColors.gray600,
-                size: 20,
-              ),
-            ],
-          ),
+  Widget _buildCard(
+    BuildContext context, {
+    required String subtitle,
+    required double progress,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-          const SizedBox(height: 8),
-
-          Text(
-            subtitle,
-            style: const TextStyle(
-              color: AppColors.gray600,
-              fontSize: AppSpacing.size12,
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: AppColors.gray200,
-            valueColor: const AlwaysStoppedAnimation(AppColors.emerald600),
-          ),
-
-          const SizedBox(height: 8),
-
-          Text(
-            "${(progress * 100).toStringAsFixed(0)}% completed",
-            style: const TextStyle(
-              fontSize: AppSpacing.size12,
-              color: AppColors.gray600,
-            ),
-          ),
-        ],
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+      color: isDark ? AppTheme.darkSurface : Colors.white,
+      elevation: isDark ? 0 : 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
       ),
-    ),
-  );
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  LucideIcons.bookOpen,
+                  color: AppColors.emerald600,
+                  size: 22,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "Continue Reading",
+                  style: TextStyle(
+                    color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
+                    fontSize: AppSpacing.size16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  LucideIcons.chevronRight,
+                  color: isDark ? AppTheme.darkTextSecondary : AppColors.gray600,
+                  size: 20,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: isDark ? AppTheme.darkTextSecondary : AppColors.gray600,
+                fontSize: AppSpacing.size12,
+              ),
+            ),
+            const SizedBox(height: 12),
+            LinearProgressIndicator(
+              value: progress,
+              backgroundColor: isDark ? AppTheme.darkBorder : AppColors.gray200,
+              valueColor: const AlwaysStoppedAnimation(AppColors.emerald600),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "${(progress * 100).toStringAsFixed(0)}% completed",
+              style: TextStyle(
+                fontSize: AppSpacing.size12,
+                color: isDark ? AppTheme.darkTextSecondary : AppColors.gray600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

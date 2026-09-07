@@ -11,6 +11,7 @@ class DatabaseHelper {
     if (_database != null) return _database!;
     _database = await _initDB('quran.db');
     await _ensureRecentSearchesTableExists(_database!);
+    await _ensureSettingsTableExists(_database!);
     return _database!;
   }
 
@@ -22,6 +23,37 @@ class DatabaseHelper {
       timestamp INTEGER
     )
     ''');
+  }
+
+  Future<void> _ensureSettingsTableExists(Database db) async {
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS user_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT
+    )
+    ''');
+  }
+
+  Future<void> setSetting(String key, String value) async {
+    final db = await database;
+    await db.insert(
+      'user_settings',
+      {'key': key, 'value': value},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<String?> getSetting(String key) async {
+    final db = await database;
+    final maps = await db.query(
+      'user_settings',
+      where: 'key = ?',
+      whereArgs: [key],
+    );
+    if (maps.isNotEmpty) {
+      return maps.first['value'] as String?;
+    }
+    return null;
   }
 
   Future<Database> _initDB(String filePath) async {
@@ -85,5 +117,6 @@ class DatabaseHelper {
 ''');
 
     await _ensureRecentSearchesTableExists(db);
+    await _ensureSettingsTableExists(db);
   }
 }

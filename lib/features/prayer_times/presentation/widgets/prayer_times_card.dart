@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
 import 'package:quran_app/core/constants/app_spacing.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
 class PrayerTimeCard extends StatelessWidget {
   final String prayerName;
@@ -18,21 +19,25 @@ class PrayerTimeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.only(bottom: AppSpacing.size16),
       padding: EdgeInsets.all(AppSpacing.size16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(AppSpacing.size12),
-        // Simple shadow to give the card effect
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withAlpha(8),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,16 +48,19 @@ class PrayerTimeCard extends StatelessWidget {
             children: [
               Text(
                 prayerName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: isDark ? AppTheme.darkTextPrimary : Colors.black,
                 ),
               ),
               const SizedBox(height: 4),
-              const Text(
+              Text(
                 "Adhan time",
-                style: TextStyle(fontSize: 12, color: Colors.black54),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isDark ? AppTheme.darkTextSecondary : Colors.black54,
+                ),
               ),
             ],
           ),
@@ -68,7 +76,6 @@ class PrayerTimeCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: AppSpacing.size16),
-              // Simplified Toggle Row mirroring image_9.png
               Row(
                 children: [
                   Icon(
@@ -76,12 +83,14 @@ class PrayerTimeCard extends StatelessWidget {
                         ? Icons.notifications_active_outlined
                         : Icons.notifications_off_outlined,
                     size: 18,
-                    color: isEnabled ? AppColors.emerald600 : Colors.grey,
+                    color: isEnabled
+                        ? AppColors.emerald600
+                        : (isDark ? AppTheme.darkTextSecondary : Colors.grey),
                   ),
                   const SizedBox(width: 4),
                   Switch.adaptive(
                     value: isEnabled,
-                    activeColor: AppColors.emerald600,
+                    activeTrackColor: AppColors.emerald600,
                     onChanged: onToggle,
                   ),
                 ],

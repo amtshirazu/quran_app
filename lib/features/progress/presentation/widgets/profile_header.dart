@@ -1,66 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../../../core/constants/app_colors.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
 
-class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, required this.name, this.since});
-
-  final String name;
+class ProfileHeader extends ConsumerWidget {
+  final String? name;
   final String? since;
 
+  const ProfileHeader({
+    super.key,
+    this.name,
+    this.since,
+  });
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final String displayName = name ?? ref.watch(profileNameProvider);
+    final sinceAsync = ref.watch(profileSinceProvider);
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 52, 20, 28),
+      padding: const EdgeInsets.fromLTRB(24, 60, 24, 32),
       decoration: const BoxDecoration(
-        color: AppColors.emerald600,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.deepGreen,
+            AppColors.emerald600,
+          ],
+        ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
       ),
       child: Column(
         children: [
+          /// App Bar Title Row
           Row(
             children: [
               IconButton(
-                icon: const Icon(LucideIcons.arrowLeft, color: Colors.white),
-                onPressed: () => context.go('/'),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 22),
+                onPressed: () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/');
+                  }
+                },
               ),
-              const SizedBox(width: 8),
-              const Expanded(
-                child: Text(
-                  'Profile & Progress',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+              const SizedBox(width: 12),
+              const Text(
+                'Profile & Progress',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 26),
-          const CircleAvatar(
-            radius: 42,
-            backgroundColor: AppColors.emerald500,
-            child: Icon(LucideIcons.user, size: 34, color: Colors.white),
+          const SizedBox(height: 20),
+
+          /// Profile Avatar Circle
+          Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(51),
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white30, width: 1.5),
+            ),
+            child: const Icon(Icons.person, color: Colors.white, size: 44),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
+
+          /// Profile Name
           Text(
-            name,
+            displayName,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(height: 4),
 
-          if (since != null && since!.isNotEmpty)
-            Text(
-              since!,
-              style: const TextStyle(color: Color(0xFFD1FAE5), fontSize: 14),
+          /// Profile Joined Date
+          Text(
+            since ?? (sinceAsync.asData?.value ?? ''),
+            style: const TextStyle(
+              color: AppColors.emerald100,
+              fontSize: 13,
             ),
+          ),
         ],
       ),
     );

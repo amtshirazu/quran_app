@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
 
 class GuidanceHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -9,7 +11,16 @@ class GuidanceHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppColors.emerald600,
       elevation: 0,
-      leading: const BackButton(color: Colors.white),
+      leading: IconButton(
+        icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 22),
+        onPressed: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/');
+          }
+        },
+      ),
       title: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

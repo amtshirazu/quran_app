@@ -91,23 +91,56 @@ class _AyahTileState extends ConsumerState<AyahTile> {
       widget.ayahNumber,
       verseEndSymbol: false,
     );
-    // Fetch translation using Riverpod provider
+    // Fetch active translations using Riverpod provider
     Widget translationWidget = ref
         .watch(
-          translationProvider((
+          activeVerseTranslationsProvider((
             surah: widget.surahNumber,
             verse: widget.ayahNumber,
           )),
         )
         .when(
-          data: (data) => Text(
-            data,
-            style: textTheme.bodyMedium?.copyWith(
-              color: AppColors.gray700,
-              fontSize: AppSpacing.size12,
-              fontStyle: FontStyle.italic,
-            ),
-            textAlign: TextAlign.left,
+          data: (translations) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: translations.map((t) {
+              final isSecondary = !t.isDefault;
+              return Padding(
+                padding: EdgeInsets.only(top: isSecondary ? 10.0 : 0.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isSecondary) ...[
+                      const Divider(
+                        height: 16,
+                        thickness: 0.8,
+                        color: Color(0xFFE5E7EB),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4.0),
+                        child: Text(
+                          t.translationName.toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.emerald600,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                    Text(
+                      t.text,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: AppColors.gray700,
+                        fontSize: AppSpacing.size12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
           ),
           loading: () => Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
@@ -151,6 +184,9 @@ class _AyahTileState extends ConsumerState<AyahTile> {
             widget.ayahNumber,
           );
           ref.invalidate(lastReadProvider);
+          ref.invalidate(lastReadResolvedSurahProvider);
+          ref.invalidate(profileProgressProvider);
+          ref.invalidate(continueReadingProvider);
           if (mounted) setState(() => _hasBeenTracked = true);
         }
       },

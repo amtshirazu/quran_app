@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../state/guidance_provider.dart';
 import '../widgets/guidance_header.dart';
 import '../widgets/guidance_subtitle.dart';
@@ -15,6 +15,7 @@ class FindGuidanceScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedEmotion = ref.watch(selectedEmotionProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return PopScope(
       canPop: selectedEmotion == null,
@@ -24,24 +25,14 @@ class FindGuidanceScreen extends ConsumerWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: selectedEmotion == null
             ? const GuidanceHeader()
             : GuidanceVerseHeader(emotion: selectedEmotion) as PreferredSizeWidget,
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                AppColors.emerald50, // Light emerald top tint
-                Colors.white,        // Fades to white
-              ],
-              stops: [0.0, 0.4],
-            ),
-          ),
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: selectedEmotion == null

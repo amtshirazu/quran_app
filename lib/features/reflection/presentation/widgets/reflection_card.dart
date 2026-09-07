@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
 import 'package:quran_app/features/quran/presentation/state/reading_mode.dart';
 import 'package:quran_app/features/reflection/domain/models/reflection_model.dart';
-import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart'; // Add intl to pubspec.yaml for date formatting
+import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart';
 
 class ReflectionCard extends ConsumerWidget {
   final ReflectionUIModel data;
@@ -15,47 +17,49 @@ class ReflectionCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const colorMidGray = Color(0xFF4A4A4A);
-    const colorDeepGray = Color(0xFF111827);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     const colorAmberBG = Color(0xFFFFEFA7);
     const colorDeepGoldText = Color(0xFF936312);
-    const colorLightGrayBorder = Color(0xFFD4D4D8);
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorLightGrayBorder.withOpacity(0.5)),
+        border: Border.all(
+          color: isDark ? AppTheme.darkBorder : const Color(0xFFD4D4D8).withAlpha(128),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row: Badges, Date, and Trash
           Row(
             children: [
               _badge(data.surah.nameEnglish, colorAmberBG, colorDeepGoldText),
               const SizedBox(width: 8),
               _badge(
                 "Verse ${data.ayahNumber}",
-                Colors.white,
-                colorMidGray,
+                isDark ? AppTheme.darkScaffold : Colors.white,
+                isDark ? AppTheme.darkTextSecondary : const Color(0xFF4A4A4A),
                 border: true,
               ),
               const Spacer(),
               Text(
                 DateFormat('MMM dd, yyyy').format(data.date),
-                style: const TextStyle(color: colorMidGray, fontSize: 12),
+                style: TextStyle(
+                  color: isDark ? AppTheme.darkTextSecondary : const Color(0xFF4A4A4A),
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(width: 8),
               IconButton(
                 visualDensity: VisualDensity.compact,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                icon: const Icon(
+                icon: Icon(
                   LucideIcons.trash2,
                   size: 18,
-                  color: colorMidGray,
+                  color: isDark ? AppTheme.darkTextSecondary : const Color(0xFF4A4A4A),
                 ),
                 onPressed: () async {
                   await ref
@@ -66,47 +70,42 @@ class ReflectionCard extends ConsumerWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 20),
-
-          // Reflection Content
           Text(
             data.content,
-            style: const TextStyle(
-              color: colorDeepGray,
+            style: TextStyle(
+              color: isDark ? AppTheme.darkTextPrimary : const Color(0xFF111827),
               fontSize: 14,
               height: 1.6,
             ),
           ),
-
           const SizedBox(height: 20),
-
-          // Footer Button
           SizedBox(
             height: 36,
             child: OutlinedButton.icon(
               onPressed: () {
-                // Set states and navigate to reader
                 ref.read(readingModeProvider.notifier).state =
                     ReadingMode.translation;
                 ref.read(selectedSurahProvider.notifier).state = data.surah;
                 context.go('/readAyah');
               },
-              icon: const Icon(
+              icon: Icon(
                 LucideIcons.bookOpen,
                 size: 18,
-                color: Color.fromARGB(255, 9, 13, 22),
+                color: isDark ? AppColors.emerald600 : const Color.fromARGB(255, 9, 13, 22),
               ),
-              label: const Text(
+              label: Text(
                 "Read Full Surah",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 9, 13, 22),
+                  color: isDark ? AppColors.emerald600 : const Color.fromARGB(255, 9, 13, 22),
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: colorLightGrayBorder),
+                side: BorderSide(
+                  color: isDark ? AppTheme.darkBorder : const Color(0xFFD4D4D8),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

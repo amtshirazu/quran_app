@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quran_app/core/constants/app_spacing.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../domain/models/surah.dart';
 import '../../state/quran_providers.dart';
@@ -26,7 +27,7 @@ class QuickAccessCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
       onTap: () {
@@ -35,46 +36,45 @@ class QuickAccessCard extends ConsumerWidget {
         context.push("/readAyah");
       },
       child: Card(
-        color: Colors.white,
-        elevation: 2,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
+        elevation: isDark ? 0 : 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.size16),
+          side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
         ),
         clipBehavior: Clip.antiAlias,
-
         child: Padding(
-          padding: EdgeInsets.all(AppSpacing.size12),
+          padding: const EdgeInsets.all(AppSpacing.size12),
           child: Row(
             children: [
               Container(
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: bgColor,
+                  color: isDark ? fgColor.withAlpha(38) : bgColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: fgColor, size: 20),
               ),
-
-              SizedBox(width: 8),
-
+              const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     label,
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: AppColors.gray500,
+                    style: TextStyle(
+                      color: isDark ? AppTheme.darkTextSecondary : AppColors.gray500,
                       fontSize: AppSpacing.size13,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     sublabel,
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: AppColors.gray900,
+                    style: TextStyle(
+                      color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
                       fontSize: AppSpacing.size11,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

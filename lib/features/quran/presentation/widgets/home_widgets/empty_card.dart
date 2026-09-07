@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_spacing.dart';
 
@@ -9,49 +10,48 @@ class EmptyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-      elevation: 2,
+      elevation: isDark ? 0 : 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
+        side: isDark ? const BorderSide(color: AppTheme.darkBorder) : BorderSide.none,
       ),
-      color: Colors.white,
+      color: isDark ? AppTheme.darkSurface : Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Title
-            const Text(
+            Text(
               'Continue Reading',
               style: TextStyle(
                 fontSize: AppSpacing.size16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? AppTheme.darkTextPrimary : Colors.black87,
               ),
             ),
             const SizedBox(height: 30),
-
-            // Icon and Subtitle
             Center(
               child: Column(
                 children: [
                   const Icon(
                     LucideIcons.bookOpen,
                     size: 48,
-                    color: AppColors.emerald600, // Matching your brand color
+                    color: AppColors.emerald600,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'Start reading to continue',
                     style: TextStyle(
                       fontSize: AppSpacing.size14,
-                      color: Colors.blueGrey,
+                      color: isDark ? AppTheme.darkTextSecondary : Colors.blueGrey,
                     ),
                   ),
                   const SizedBox(height: 20),
-
                   ElevatedButton(
                     onPressed: () {
                       context.go('/surahs');

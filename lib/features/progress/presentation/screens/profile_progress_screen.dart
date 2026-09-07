@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quran_app/core/constants/app_colors.dart';
 import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
 import 'package:quran_app/features/progress/presentation/widgets/profile_header.dart';
 import 'package:quran_app/features/progress/presentation/widgets/quran_progress_card.dart';
@@ -19,17 +18,9 @@ class ProfileProgressScreen extends ConsumerWidget {
     final progressAsync = ref.watch(profileProgressProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.emerald50,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.emerald50, Colors.white],
-          ),
-        ),
-
-        // 👇 First resolve BOTH async values
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: progressAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('Error: $e')),

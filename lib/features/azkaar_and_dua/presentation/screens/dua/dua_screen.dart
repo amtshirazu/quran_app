@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
-import 'package:quran_app/features/azkaar_and_dua/domain/model/quranic_dua.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/states/dua_provider.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/widgets/dua/dua_card.dart';
 import 'package:quran_app/features/azkaar_and_dua/presentation/widgets/dua/dua_category_toggle.dart';
@@ -48,12 +48,13 @@ class _DuasScreenState extends ConsumerState<DuasScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final duasAsync = searchQuery.isEmpty
         ? ref.watch(allDuasProvider)
         : ref.watch(filteredDuasProvider(searchQuery));
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4FBF7),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -68,32 +69,24 @@ class _DuasScreenState extends ConsumerState<DuasScreen> {
               children: [
                 const PowerOfDuaCard(),
                 const SizedBox(height: 16),
-
-                /// Category Toggle (Quranic Duas vs Witr & Qunoot)
                 const DuaCategoryToggle(),
                 const SizedBox(height: 16),
-
-                /// Search Input Field Element
                 DuaSearchField(
                   onChanged: (value) => setState(() => searchQuery = value),
                 ),
                 const SizedBox(height: 20),
-
-                /// Section Label Title Block
                 const DuaSectionTitle(),
                 const SizedBox(height: 12),
-
-                /// Reactive Query List Rendering View
                 duasAsync.when(
                   data: (duas) {
                     if (duas.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
                         child: Center(
                           child: Text(
                             "No matching supplications found.",
                             style: TextStyle(
-                              color: Colors.black45,
+                              color: isDark ? AppTheme.darkTextSecondary : Colors.black45,
                               fontSize: 14,
                             ),
                           ),

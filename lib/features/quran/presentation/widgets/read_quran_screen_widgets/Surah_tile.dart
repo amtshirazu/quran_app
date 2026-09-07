@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
+import 'package:quran_app/features/progress/presentation/state/last_read_provider.dart';
 import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
 import 'package:quran_app/features/quran/presentation/state/quran_providers.dart';
 import 'package:quran_app/features/quran/presentation/widgets/read_quran_screen_widgets/surah_verse_number_badge.dart';
@@ -19,82 +21,86 @@ class SurahTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: () async {
           final progressService = ref.read(progressServiceProvider);
           await progressService.clearLastRead();
+          ref.invalidate(lastReadProvider);
+          ref.invalidate(lastReadResolvedSurahProvider);
+          ref.invalidate(profileProgressProvider);
+          ref.invalidate(continueReadingProvider);
           ref.read(searchQueryProvider.notifier).state = "";
           ref.read(selectedSurahProvider.notifier).state = surah;
-          // ref.read(currentPageProvider.notifier).state = surah.number;
           ref.read(shouldResumeLastReadProvider.notifier).state = false;
           context.push("/readAyah");
         },
-        child: Card(
-          color: Colors.white,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius
-                .zero, // Optional: makes corners square so they connect perfectly
+        child: Container(
+          decoration: BoxDecoration(
+            color: isDark ? AppTheme.darkSurface : Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: isDark ? AppTheme.darkBorder : AppColors.gray200,
+                width: 0.8,
+              ),
+            ),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SurahVerseNumberBadge(surahNumber: surah.number),
-                SizedBox(width: 16),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        surah.nameEnglish,
-                        style: textTheme.titleMedium?.copyWith(
-                          color: AppColors.gray900,
-                          fontSize: AppSpacing.size14,
-                        ),
-                      ),
-                      Text(
-                        surah.translation,
-                        style: textTheme.bodyLarge?.copyWith(
-                          color: AppColors.gray600,
-                          fontSize: AppSpacing.size12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Column(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SurahVerseNumberBadge(surahNumber: surah.number),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      surah.nameArabic,
+                      surah.nameEnglish,
                       style: textTheme.titleMedium?.copyWith(
-                        color: AppColors.gray900,
+                        color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
                         fontSize: AppSpacing.size14,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4),
-                    Row(
-                      children: [
-                        SurahVersesBadge(totalAyahs: surah.totalAyahs),
-                        SizedBox(width: 4),
-                        Icon(
-                          LucideIcons.chevronRight,
-                          color: AppColors.gray400,
-                        ),
-                      ],
+                    Text(
+                      surah.translation,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: isDark ? AppTheme.darkTextSecondary : AppColors.gray600,
+                        fontSize: AppSpacing.size12,
+                      ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    surah.nameArabic,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
+                      fontSize: AppSpacing.size14,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      SurahVersesBadge(totalAyahs: surah.totalAyahs),
+                      const SizedBox(width: 4),
+                      Icon(
+                        LucideIcons.chevronRight,
+                        color: isDark ? AppTheme.darkTextSecondary : AppColors.gray400,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

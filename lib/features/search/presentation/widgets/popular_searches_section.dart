@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../state/search_provider.dart';
 import 'search_chip.dart';
 
@@ -15,22 +16,22 @@ class PopularSearchesSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final popularList = ref.watch(popularSearchesProvider);
     final isExpanded = ref.watch(popularSearchesExpandedProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final displayList = isExpanded ? popularList : popularList.take(5).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// Section Header Row
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'POPULAR SEARCHES',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1F2421), // Dark charcoal
+                color: isDark ? AppTheme.darkCategoryTitle : const Color(0xFF1F2421),
                 letterSpacing: 0.5,
               ),
             ),
@@ -39,10 +40,10 @@ class PopularSearchesSection extends ConsumerWidget {
                 ref.read(popularSearchesExpandedProvider.notifier).state =
                     !isExpanded;
               },
-              child: Text(
-                isExpanded ? 'Show Less' : 'View All',
-                style: const TextStyle(
-                  color: Color(0xFF1E824C), // Accent green
+              child: const Text(
+                'View All',
+                style: TextStyle(
+                  color: Color(0xFF1E824C),
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
@@ -52,7 +53,6 @@ class PopularSearchesSection extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
 
-        /// Wrap Chips Layout
         Wrap(
           spacing: 8,
           runSpacing: 8,

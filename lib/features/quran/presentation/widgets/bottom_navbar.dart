@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 
@@ -15,11 +16,18 @@ class BottomNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.only(left: 40, right: 40, top: 12, bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: AppColors.gray200, width: 1)),
+        color: isDark ? AppTheme.darkSurface : Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppTheme.darkBorder : AppColors.gray200,
+            width: 1,
+          ),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,7 +87,10 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? AppColors.emerald600 : AppColors.gray600;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isActive
+        ? AppColors.emerald600
+        : (isDark ? AppTheme.darkTextSecondary : AppColors.gray600);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -88,7 +99,7 @@ class _NavItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: color, size: 18),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             text,
             style: TextStyle(color: color, fontSize: AppSpacing.size10),

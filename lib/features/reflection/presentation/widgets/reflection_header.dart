@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
 import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart';
 
 class ReflectionHeader extends ConsumerWidget {
@@ -20,9 +21,9 @@ class ReflectionHeader extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 60, 16, 24),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.deepGreen, AppColors.emerald600],
         ),
       ),
       child: Column(
@@ -31,7 +32,13 @@ class ReflectionHeader extends ConsumerWidget {
           Row(
             children: [
               IconButton(
-                onPressed: () => context.pop(),
+                onPressed: () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/');
+                  }
+                },
                 icon: const Icon(LucideIcons.arrowLeft, color: Colors.white),
               ),
               const SizedBox(width: 8),
@@ -50,7 +57,7 @@ class ReflectionHeader extends ConsumerWidget {
                     Text(
                       "$count reflections",
                       style: const TextStyle(
-                        color: Colors.white70,
+                        color: AppColors.emerald100,
                         fontSize: 13,
                       ),
                     ),
@@ -64,7 +71,7 @@ class ReflectionHeader extends ConsumerWidget {
                 label: const Text("New"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFFD97706),
+                  foregroundColor: AppColors.emerald600,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -80,9 +87,9 @@ class ReflectionHeader extends ConsumerWidget {
           Container(
             height: 45,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withAlpha(38),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              border: Border.all(color: Colors.white30),
             ),
             child: TextField(
               onChanged: (value) {
@@ -90,19 +97,19 @@ class ReflectionHeader extends ConsumerWidget {
               },
               style: const TextStyle(color: Colors.white),
               cursorColor: Colors.white,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Search reflections...",
                 hintStyle: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white70,
                   fontSize: 14,
                 ),
-                prefixIcon: const Icon(
+                prefixIcon: Icon(
                   LucideIcons.search,
                   color: Colors.white70,
                   size: 18,
                 ),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                contentPadding: EdgeInsets.symmetric(vertical: 10),
               ),
             ),
           ),

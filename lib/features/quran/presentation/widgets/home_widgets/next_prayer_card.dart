@@ -22,8 +22,9 @@ class NextPrayerCard extends ConsumerWidget {
         return Container(
           padding: EdgeInsets.all(AppSpacing.size12),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(.1),
+            color: Colors.white.withAlpha(26),
             borderRadius: BorderRadius.circular(AppSpacing.size16),
+            border: Border.all(color: Colors.white12),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,8 +34,8 @@ class NextPrayerCard extends ConsumerWidget {
                   Container(
                     width: 40,
                     height: 40,
-                    decoration: const BoxDecoration(
-                      color: AppColors.emerald500,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(51),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(

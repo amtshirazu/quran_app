@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:quran_app/core/constants/app_colors.dart';
 
 class AzkaarDuaCard extends StatelessWidget {
   const AzkaarDuaCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const tealColor = Color(0xFF00A18E); // Primary teal from image
-
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, bottom: 25, top: 15),
       width: double.infinity,
@@ -18,7 +17,7 @@ class AzkaarDuaCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [tealColor, Color(0xFF00897B)],
+          colors: [AppColors.deepGreen, AppColors.emerald600],
         ),
       ),
       child: Column(
@@ -40,20 +39,18 @@ class AzkaarDuaCard extends StatelessWidget {
           const SizedBox(height: 12),
           const Text(
             "Daily remembrance and supplications from the Quran and Sunnah",
-            style: TextStyle(color: Colors.white70, fontSize: 13),
+            style: TextStyle(color: AppColors.emerald100, fontSize: 13),
           ),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                context.push(
-                  '/azkaarAndDua',
-                ); // Navigate to Azkaar and Dua screen
+                context.push('/azkaarAndDua');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: tealColor,
+                foregroundColor: AppColors.emerald600,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

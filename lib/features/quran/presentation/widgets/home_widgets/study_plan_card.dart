@@ -3,14 +3,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_spacing.dart';
 
-
-
 class StudyPlanCard extends StatelessWidget {
   const StudyPlanCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
@@ -27,15 +24,14 @@ class StudyPlanCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.blue500,
-              AppColors.blue600,
+              AppColors.deepGreen,
+              AppColors.emerald600,
             ],
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Row(
               children: [
                 const Icon(
@@ -47,31 +43,27 @@ class StudyPlanCard extends StatelessWidget {
                 Text(
                   "Your Study Plan",
                   style: textTheme.headlineLarge?.copyWith(
+                    color: Colors.white,
                     fontSize: AppSpacing.size16,
                   ),
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
-
             const Text(
               "Create a personalized plan for reading, understanding, or memorizing",
               style: TextStyle(
-                color: AppColors.blue100,
-                  fontSize: AppSpacing.size12,
+                color: AppColors.emerald100,
+                fontSize: AppSpacing.size12,
               ),
             ),
-
             const SizedBox(height: 16),
-
-            /// Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  foregroundColor: AppColors.blue600,
+                  foregroundColor: AppColors.emerald600,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   shape: RoundedRectangleBorder(
@@ -85,6 +77,7 @@ class StudyPlanCard extends StatelessWidget {
                   "Create Plan",
                   style: TextStyle(
                     fontSize: AppSpacing.size12,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

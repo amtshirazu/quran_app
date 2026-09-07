@@ -8,8 +8,14 @@ class DuaHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 60, 24, 25),
-      color: AppColors.emerald600,
+      padding: const EdgeInsets.fromLTRB(16, 50, 24, 20),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.deepGreen, AppColors.emerald600],
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -36,7 +42,7 @@ class DuaHeader extends StatelessWidget {
               SizedBox(height: 6),
               Text(
                 "Supplications from the Quran and Sunnah",
-                style: TextStyle(fontSize: 14, color: AppColors.emerald50),
+                style: TextStyle(fontSize: 14, color: AppColors.emerald100),
               ),
             ],
           ),

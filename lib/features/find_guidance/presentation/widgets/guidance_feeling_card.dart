@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../domain/model/guidance_category.dart';
 
 class GuidanceFeelingCard extends StatelessWidget {
@@ -14,19 +15,23 @@ class GuidanceFeelingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.gray200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(8),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: isDark ? AppTheme.darkBorder : AppColors.gray200),
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withAlpha(8),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -42,7 +47,9 @@ class GuidanceFeelingCard extends StatelessWidget {
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
-                    color: category.backgroundColor,
+                    color: isDark
+                        ? category.iconColor.withAlpha(38)
+                        : category.backgroundColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
@@ -58,26 +65,26 @@ class GuidanceFeelingCard extends StatelessWidget {
                     children: [
                       Text(
                         category.emotion,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.gray900,
+                          color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         '${category.verseCount} ${category.verseCount == 1 ? 'verse' : 'verses'}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.gray500,
+                          color: isDark ? AppTheme.darkTextSecondary : AppColors.gray500,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Icon(
+                Icon(
                   Icons.chevron_right,
-                  color: AppColors.gray400,
+                  color: isDark ? AppTheme.darkTextSecondary : AppColors.gray400,
                   size: 24,
                 ),
               ],

@@ -1,82 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
-import 'package:quran_app/features/prayer_times/presentation/states/prayer_time_provider.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 
-class PrayerTimesHeader extends ConsumerWidget implements PreferredSizeWidget {
+class PrayerTimesHeader extends StatelessWidget implements PreferredSizeWidget {
   const PrayerTimesHeader({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(120);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final locationAsync = ref.watch(countryAndCityNameProvider);
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      color: AppColors.emerald600,
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 25),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment
-              .center, // This centers the arrow with the text block
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
-            const SizedBox(width: 4),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min, // Wraps height to content
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Prayer Times",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      height: 1.2, // Adjusts line height for tighter grouping
-                    ),
-                  ),
-                  locationAsync.when(
-                    data: (data) => Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on_outlined,
-                            color: Colors.white70,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "${data['city']}, ${data['country']}",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    loading: () => const Text(
-                      "Detecting location...",
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                    error: (_, __) => const Text(
-                      "Location unknown",
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ),
-                ],
+      padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkScaffold : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [AppColors.deepGreen, AppColors.emerald600],
               ),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 22),
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/');
+              }
+            },
+          ),
+          const SizedBox(width: 12),
+          const Text(
+            'Prayer Times & Qibla',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(80);
 }

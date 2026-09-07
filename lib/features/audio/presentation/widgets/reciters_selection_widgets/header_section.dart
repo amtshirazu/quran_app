@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_spacing.dart';
 
@@ -12,21 +12,31 @@ class QuranAudioHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Material(
+      color: Colors.transparent,
       child: Container(
         height: 160,
-        decoration: const BoxDecoration(
-          color: AppColors.emerald600,
-          border: Border(bottom: BorderSide(color: Colors.black12, width: 1)),
+        decoration: BoxDecoration(
+          color: isDark ? AppTheme.darkScaffold : null,
+          gradient: isDark
+              ? null
+              : const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [AppColors.deepGreen, AppColors.emerald600],
+                ),
+          border: const Border(bottom: BorderSide(color: Colors.black12, width: 1)),
         ),
-        padding: const EdgeInsets.only(right: 20,left: 20, top: 40, bottom: 30),
+        padding: const EdgeInsets.only(right: 20, left: 20, top: 40, bottom: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(51),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
@@ -52,15 +62,14 @@ class QuranAudioHeader extends ConsumerWidget {
                   Text(
                     "Listen to beautiful recitations",
                     style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: AppSpacing.size13,
+                      color: Colors.white70,
+                      fontSize: AppSpacing.size13,
                     ),
                     softWrap: true,
                   ),
                 ],
               ),
             ),
-
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               decoration: BoxDecoration(
@@ -70,9 +79,9 @@ class QuranAudioHeader extends ConsumerWidget {
               child: Row(
                 children: [
                   const Icon(
-                      LucideIcons.star,
-                      size: 14,
-                      color: AppColors.emerald600,
+                    LucideIcons.star,
+                    size: 14,
+                    color: AppColors.emerald600,
                   ),
                   const SizedBox(width: 10),
                   Text(

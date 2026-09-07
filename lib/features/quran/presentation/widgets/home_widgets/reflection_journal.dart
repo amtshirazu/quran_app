@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_spacing.dart';
 import 'package:quran_app/features/reflection/presentation/states/reflection_provider.dart';
-
 import '../../../../../core/constants/app_colors.dart';
 
 class ReflectionJournalCard extends ConsumerWidget {
@@ -14,7 +13,6 @@ class ReflectionJournalCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final reflectionStats = ref.watch(reflectionStatsProvider);
     final totalCount = reflectionStats['thisWeek'].toString();
-    ;
 
     return Card(
       margin: const EdgeInsets.only(left: 15, right: 15, bottom: 25, top: 15),
@@ -25,11 +23,11 @@ class ReflectionJournalCard extends ConsumerWidget {
       elevation: 6,
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.size20),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [AppColors.amber500, AppColors.amber600],
+            colors: [AppColors.deepGreen, AppColors.emerald600],
           ),
         ),
         child: Row(
@@ -41,7 +39,7 @@ class ReflectionJournalCard extends ConsumerWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withAlpha(51),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -66,7 +64,7 @@ class ReflectionJournalCard extends ConsumerWidget {
                     Text(
                       "$totalCount reflections this week",
                       style: const TextStyle(
-                        color: Colors.white70,
+                        color: AppColors.emerald100,
                         fontSize: AppSpacing.size12,
                       ),
                     ),
@@ -74,14 +72,13 @@ class ReflectionJournalCard extends ConsumerWidget {
                 ),
               ],
             ),
-            // Right side: button
             TextButton(
               onPressed: () {
                 context.push('/reflections');
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.white.withOpacity(0.1),
+                backgroundColor: Colors.white.withAlpha(26),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 6,

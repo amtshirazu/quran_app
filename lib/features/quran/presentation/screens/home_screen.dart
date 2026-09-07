@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Added
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quran_app/features/prayer_times/presentation/states/prayer_time_provider.dart';
 import 'package:quran_app/features/quran/presentation/widgets/home_widgets/body_section.dart';
-import 'package:quran_app/features/prayer_times/presentation/states/prayer_time_provider.dart'; // Added
-import '../../../../core/constants/app_colors.dart';
 import '../widgets/bottom_navbar.dart';
 import '../widgets/home_widgets/header_section.dart';
 
@@ -14,30 +13,22 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-// Parent class changed to ConsumerState
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.emerald50, Colors.white],
-          ),
-        ),
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: CustomScrollView(
-          cacheExtent: 1000,
           slivers: [_buildHeader(), _buildBody()],
         ),
       ),
       bottomNavigationBar: BottomNavbar(
         currentIndex: selectedIndex,
         onTap: (index) {
-          // ref is now globally available in ConsumerState
           ref.invalidate(locationProvider);
 
           setState(() {

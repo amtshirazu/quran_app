@@ -1,74 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:quran_app/core/constants/app_spacing.dart';
-import 'package:quran_app/features/progress/presentation/state/last_read_provider.dart';
-import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/quran/presentation/widgets/read_quran_screen_widgets/search.dart';
-
 import '../../../../../core/constants/app_colors.dart';
-import '../../state/quran_providers.dart';
 
-class ReadHeaderSection extends ConsumerWidget {
-  const ReadHeaderSection({super.key});
+class ReadQuranHeaderSection extends StatelessWidget {
+  const ReadQuranHeaderSection({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 60, 16, 20),
-      decoration: const BoxDecoration(color: AppColors.emerald600),
-
+      padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkScaffold : null,
+        gradient: isDark
+            ? null
+            : const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [AppColors.deepGreen, AppColors.emerald600],
+              ),
+      ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 22),
                 onPressed: () {
-                  ref.watch(searchQueryProvider.notifier).state = '';
-                  ref.invalidate(lastReadProvider);
-                  ref.invalidate(continueReadingProvider);
-                  ref.invalidate(surahProgressProvider);
-                  context.go('/');
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/');
+                  }
                 },
-                icon: Icon(
-                  LucideIcons.arrowLeft,
-                  color: Colors.white,
-                  size: 24,
-                ),
               ),
-              SizedBox(width: 16),
-
+              const SizedBox(width: 12),
               Column(
-                children: [
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
                   Text(
-                    "Read Quran",
-                    style: textTheme.titleLarge?.copyWith(
-                      fontSize: AppSpacing.size20,
+                    'Read Quran',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-
+                  SizedBox(height: 2),
                   Text(
-                    "114 Surahs",
-                    style: textTheme.titleMedium?.copyWith(
-                      color: AppColors.gray400,
-                      fontSize: AppSpacing.size14,
+                    '114 Surahs',
+                    style: TextStyle(
+                      color: AppColors.emerald100,
+                      fontSize: 13,
                     ),
                   ),
                 ],
               ),
             ],
           ),
-
-          SizedBox(height: 20),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: SearchField(),
-          ),
+          const SizedBox(height: 16),
+          const SearchField(),
         ],
       ),
     );

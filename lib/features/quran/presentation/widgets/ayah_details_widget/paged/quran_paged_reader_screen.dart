@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qcf_quran_plus/qcf_quran_plus.dart';
+import 'package:quran_app/features/progress/presentation/state/last_read_provider.dart';
 import 'package:quran_app/features/progress/presentation/state/profile_progress_provider.dart';
 
 import '../../../state/quran_providers.dart';
@@ -30,24 +31,27 @@ class _QuranPagedReaderScreenState
 
       ref.read(currentPageProvider.notifier).state = startPage;
 
-      progress.trackPage(startPage);
+      await progress.trackPage(startPage);
+      _invalidateProgressProviders();
     });
+  }
+
+  void _invalidateProgressProviders() {
+    ref.invalidate(lastReadProvider);
+    ref.invalidate(lastReadResolvedSurahProvider);
+    ref.invalidate(profileProgressProvider);
+    ref.invalidate(continueReadingProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    //final currentPage = ref.watch(currentPageProvider);
 
     return QuranPageView(
       pageController: widget.controller,
-
       highlights: const [],
-
       isDarkMode: isDarkMode,
-
       isTajweed: false,
-
       onPageChanged: (pageNumber) async {
         final progress = ref.read(progressServiceProvider);
 
@@ -60,15 +64,17 @@ class _QuranPagedReaderScreenState
           page: pageNumber,
         );
 
-        if (newSurahId != prevSurahId) {
+        if (prevSurahId != null && newSurahId != prevSurahId) {
           await progress.clearLastRead();
+        }
 
+        if (newSurahId != null) {
           ref.read(currentPageSurahIdProvider.notifier).state = newSurahId;
         }
 
-        progress.trackPage(pageNumber);
+        await progress.trackPage(pageNumber);
+        _invalidateProgressProviders();
       },
-
       onLongPress: (surah, verse, details) {
         debugPrint(
           "Long pressed: Surah $surah, Verse $verse - Details: $details",

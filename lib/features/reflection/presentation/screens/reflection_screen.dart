@@ -8,14 +8,10 @@ class ReflectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Matching your app's background color
-      backgroundColor: const Color(0xFFFFFBEB),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          // The Header (includes Search bar)
           const ReflectionHeader(),
-
-          // The Body (Scrollable content)
           const Expanded(child: ReflectionBody()),
         ],
       ),

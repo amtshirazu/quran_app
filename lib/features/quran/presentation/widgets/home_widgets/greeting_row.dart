@@ -15,7 +15,7 @@ class GreetingRow extends ConsumerWidget {
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: const [
             Text(
               "As-Salamu Alaykum",
               style: TextStyle(
@@ -24,7 +24,7 @@ class GreetingRow extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               "May peace be upon you",
               style: TextStyle(
@@ -34,21 +34,21 @@ class GreetingRow extends ConsumerWidget {
             ),
           ],
         ),
-
         InkWell(
           onTap: () {
             ref.invalidate(profileProgressProvider);
             context.go('/profile');
           },
           child: Container(
-            width: 65,
-            height: 65,
-            decoration: const BoxDecoration(
-              color: AppColors.emerald500,
+            width: 58,
+            height: 58,
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(51),
               shape: BoxShape.circle,
+              border: Border.all(color: Colors.white30, width: 1.5),
             ),
             alignment: Alignment.center,
-            child: const Icon(Icons.person, color: Colors.white, size: 40),
+            child: const Icon(Icons.person, color: Colors.white, size: 36),
           ),
         ),
       ],

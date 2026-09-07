@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import '../../../../core/constants/app_colors.dart';
-
-
 
 class ProgressMetric extends StatelessWidget {
   const ProgressMetric({
@@ -19,6 +18,8 @@ class ProgressMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -26,8 +27,8 @@ class ProgressMetric extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           value,
-          style: const TextStyle(
-            color: AppColors.gray900,
+          style: TextStyle(
+            color: isDark ? AppTheme.darkTextPrimary : AppColors.gray900,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
@@ -36,8 +37,8 @@ class ProgressMetric extends StatelessWidget {
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.gray600,
+          style: TextStyle(
+            color: isDark ? AppTheme.darkTextSecondary : AppColors.gray600,
             fontSize: 12,
           ),
         ),

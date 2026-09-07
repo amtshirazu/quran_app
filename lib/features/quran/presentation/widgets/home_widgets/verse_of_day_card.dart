@@ -22,7 +22,7 @@ class DailyVerseCard extends ConsumerWidget {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.emerald500, AppColors.emerald600],
+            colors: [AppColors.deepGreen, AppColors.emerald600],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -71,7 +71,7 @@ class DailyVerseCard extends ConsumerWidget {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: AppSpacing.size14,
-                    color: AppColors.emerald50,
+                    color: AppColors.emerald100,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -83,7 +83,7 @@ class DailyVerseCard extends ConsumerWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white.withAlpha(38),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(

@@ -14,18 +14,13 @@ class BookmarkScreenState extends ConsumerState<BookmarkScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFFFF8E1), Colors.white],
-          ),
-        ),
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Column(
           children: [
-            BookmarkHeader(),
-            Expanded(child: BookmarkBody()),
+            const BookmarkHeader(),
+            const Expanded(child: BookmarkBody()),
           ],
         ),
       ),

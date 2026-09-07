@@ -32,15 +32,20 @@ class ProgressService {
 
     final now = DateTime.now().toIso8601String();
 
+    final activeSurahId = await resolveActiveSurah(
+      mode: 'page',
+      page: page,
+    );
+
     await db.insert('reading_sessions', {
       'mode': 'page',
-      'surah_id': null, // 🔥 FIX
+      'surah_id': activeSurahId,
       'ayah': null,
       'page': page,
       'timestamp': now,
     });
 
-    await _updateLastRead(page: page, mode: 'page');
+    await _updateLastRead(surahId: activeSurahId, page: page, mode: 'page');
   }
 
   // ========================= STREAK =========================
@@ -117,16 +122,37 @@ class ProgressService {
   }) async {
     final db = await dbHelper.database;
 
-    // Resolve active surah for page mode to ensure last_read always has a valid surah_id for easier UI display and consistency
+    // Resolve active surah for page/ayah mode
     final activeSurah = await resolveActiveSurah(
       mode: mode,
       surahId: surahId,
       page: page,
     );
+
+    final resolvedSurahId = activeSurah ?? surahId;
+
+    if (resolvedSurahId != null) {
+      // Check if last_read contains entries for a DIFFERENT surah
+      final existingRows = await db.query(
+        'last_read',
+        columns: ['surah_id'],
+        where: 'surah_id IS NOT NULL',
+        limit: 1,
+      );
+
+      if (existingRows.isNotEmpty) {
+        final existingSurahId = existingRows.first['surah_id'] as int?;
+        if (existingSurahId != null && existingSurahId != resolvedSurahId) {
+          // Surah changed! Clear last_read for the new Surah session
+          await db.delete('last_read');
+        }
+      }
+    }
+
     final now = DateTime.now().toIso8601String();
 
     await db.insert('last_read', {
-      'surah_id': activeSurah ?? surahId,
+      'surah_id': resolvedSurahId,
       'ayah': ayah,
       'page': page,
       'mode': mode,
@@ -134,7 +160,7 @@ class ProgressService {
     });
   }
 
-  // clear last_read when mode changes to ensure only ayah or page data are stored in last_read
+  /// Clears last_read table when opening or switching to a new Surah
   Future<void> clearLastRead() async {
     final db = await dbHelper.database;
     await db.delete('last_read');
@@ -167,38 +193,36 @@ class ProgressService {
     int totalAyahs,
   ) async {
     final db = await dbHelper.database;
-    final rows = await db.query('last_read');
+    final rows = await db.query(
+      'last_read',
+      where: 'surah_id = ?',
+      whereArgs: [surahId],
+    );
     if (rows.isEmpty) return 0.0;
 
     final Set<int> uniqueAyahs = {};
-    final mode = rows.first['mode'];
 
-    if (mode == 'ayah') {
-      for (final row in rows) {
+    for (final row in rows) {
+      final mode = row['mode'];
+
+      if (mode == 'ayah') {
         final ayah = row['ayah'] as int?;
         if (ayah != null) uniqueAyahs.add(ayah);
-      }
-    } else if (mode == 'page') {
-      final Set<int> uniquePages = {};
-      for (final row in rows) {
+      } else if (mode == 'page') {
         final page = row['page'] as int?;
         if (page != null && page >= 1 && page <= 604) {
-          uniquePages.add(page);
-        }
-      }
-
-      for (final page in uniquePages) {
-        final pageData = quran.getPageData(page).cast<Map<String, dynamic>>();
-        for (final verse in pageData) {
-          if (verse['surah'] == surahId) {
-            uniqueAyahs.add(verse['ayah']);
+          final pageData = quran.getPageData(page).cast<Map<String, dynamic>>();
+          for (final verse in pageData) {
+            if (verse['surah'] == surahId) {
+              uniqueAyahs.add(verse['ayah']);
+            }
           }
         }
       }
     }
 
     return totalAyahs == 0
-        ? 0
+        ? 0.0
         : (uniqueAyahs.length / totalAyahs).clamp(0.0, 1.0);
   }
 
@@ -216,7 +240,7 @@ class ProgressService {
     if (pageData.isEmpty) return null;
 
     final surahsOnPage = pageData
-        .map((e) => e['surah'] as int)
+        .map((e) => (e['surah'] ?? e['surah_number']) as int)
         .toSet()
         .toList();
 
@@ -225,26 +249,26 @@ class ProgressService {
     }
 
     final firstVerse = pageData.first;
-    final firstVerseSurah = firstVerse['surah'];
-    final firstVerseNumber = firstVerse['ayah'];
+    final firstVerseSurah =
+        (firstVerse['surah'] ?? firstVerse['surah_number']) as int?;
+    final firstVerseNumber =
+        (firstVerse['ayah'] ?? firstVerse['start']) as int?;
 
     if (firstVerseNumber == 1) {
       return firstVerseSurah;
     }
 
-    // Otherwise, if the page starts as a continuation, but a new Surah
-    // begins later on the same page, we look for the first 'Ayah 1' occurrence.
     try {
       final firstNewSurahOnPage = pageData.firstWhere(
-        (verse) => verse['ayah'] == 1,
+        (verse) => (verse['ayah'] ?? verse['start']) == 1,
       );
-      return firstNewSurahOnPage['surah'];
+      return (firstNewSurahOnPage['surah'] ??
+          firstNewSurahOnPage['surah_number']) as int?;
     } catch (_) {
-      // If no verse on this page is an 'Ayah 1', it's a continuation
-      // of a very long Surah (like Al-Baqarah).
       return firstVerseSurah;
     }
   }
+
   // ========================= STATS =========================
 
   Future<int?> getSurahsCompleted(List<dynamic> surahs) async {
@@ -291,7 +315,6 @@ class ProgressService {
       for (final row in pageResult) {
         final page = row['page'] as int?;
         if (page != null && page >= 1 && page <= 604) {
-          // Instant package lookup
           final pageData = quran.getPageData(page).cast<Map<String, dynamic>>();
           for (final verse in pageData) {
             if (verse['surah'] == surahId) {
@@ -369,10 +392,7 @@ class ProgressService {
   Future<void> clearAllReadingHistory() async {
     final db = await dbHelper.database;
 
-    // Delete all rows from reading_sessions
     await db.delete('reading_sessions');
-
-    // Also clear last_read so the UI doesn't try to resume a deleted session
     await db.delete('last_read');
   }
 }

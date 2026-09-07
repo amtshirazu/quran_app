@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:quran_app/core/constants/app_colors.dart';
+import 'package:quran_app/core/theme/app_theme.dart';
 import 'package:quran_app/features/azkaar_and_dua/domain/model/quranic_dua.dart';
 
 class DuaCard extends StatelessWidget {
@@ -11,6 +12,7 @@ class DuaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isWitr = dua.categoryType == 'witr';
 
     final formattedSubject = isWitr
@@ -23,15 +25,18 @@ class DuaCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppTheme.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(5),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: isDark ? Border.all(color: AppTheme.darkBorder) : null,
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withAlpha(5),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -45,10 +50,10 @@ class DuaCard extends StatelessWidget {
                   children: [
                     Text(
                       formattedSubject,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: isDark ? AppTheme.darkTextPrimary : Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -58,7 +63,7 @@ class DuaCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.emerald100,
+                        color: isDark ? AppColors.emerald600.withAlpha(38) : AppColors.emerald100,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -89,10 +94,10 @@ class DuaCard extends StatelessWidget {
                         ),
                       );
                     },
-                    icon: const Icon(
+                    icon: Icon(
                       LucideIcons.copy,
                       size: 20,
-                      color: Colors.black38,
+                      color: isDark ? AppTheme.darkTextSecondary : Colors.black38,
                     ),
                   ),
                 ],
@@ -105,11 +110,11 @@ class DuaCard extends StatelessWidget {
           Text(
             dua.arabic,
             textAlign: TextAlign.right,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: "Uthmanic",
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: isDark ? AppTheme.darkTextPrimary : Colors.black,
               height: 1.8,
             ),
           ),
@@ -121,15 +126,15 @@ class DuaCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFF7F9F8),
+                color: isDark ? AppTheme.darkScaffold : const Color(0xFFF7F9F8),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 dua.transliteration!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontStyle: FontStyle.italic,
-                  color: Colors.black54,
+                  color: isDark ? AppTheme.darkTextSecondary : Colors.black54,
                   height: 1.4,
                 ),
               ),
@@ -140,9 +145,9 @@ class DuaCard extends StatelessWidget {
           /// Translation
           Text(
             dua.translation,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Colors.black87,
+              color: isDark ? AppTheme.darkTextPrimary : Colors.black87,
               height: 1.4,
             ),
           ),
